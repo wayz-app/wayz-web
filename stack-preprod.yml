@@ -1,0 +1,22 @@
+version: '3.9'
+
+services:
+  web:
+    image: ghcr.io/wayz-app/wayz-web:latest
+    networks:
+      - traefik-public
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.wayz-web-preprod.rule=Host(`preprod.wayz.ovh`)"
+        - "traefik.http.routers.wayz-web-preprod.entrypoints=websecure"
+        - "traefik.http.routers.wayz-web-preprod.tls.certresolver=letsencrypt"
+        - "traefik.http.services.wayz-web-preprod.loadbalancer.server.port=3000"
+        - "traefik.http.routers.wayz-web-preprod-http.rule=Host(`preprod.wayz.ovh`)"
+        - "traefik.http.routers.wayz-web-preprod-http.entrypoints=web"
+        - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+        - "traefik.http.routers.wayz-web-preprod-http.middlewares=redirect-to-https"
+
+networks:
+  traefik-public:
+    external: true
