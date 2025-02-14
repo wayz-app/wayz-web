@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import '../css/Login.css';
+import '../css/Register.css';
 import Header from '../components/Header'; 
 import Footer from '../components/Footer'; 
 
-const Login = () => {
-    const navigate = useNavigate();
+const Register = () => {
     const [formData, setFormData] = useState({
         email: '',
-        password: ''
+        password: '',
+        username: '',
     });
 
     const handleInputChange = (e) => {
@@ -19,16 +18,16 @@ const Login = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log('Form submitted:', formData);
-        // Add your login logic here
+        // Add your register logic here
     };
 
     return (
         <>
             <Header />
 
-            <div className="login-content">
-                <h1>Login</h1>
-                <form className="login-form" onSubmit={handleSubmit}>
+            <div className="register-content">
+                <h1>Register</h1>
+                <form className="register-form" onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label htmlFor="email">Email</label>
                         <input
@@ -36,6 +35,17 @@ const Login = () => {
                             id="email"
                             name="email"
                             value={formData.email}
+                            onChange={handleInputChange}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="username">Username</label>
+                        <input
+                            type="text"
+                            id="username"
+                            name="email"
+                            value={formData.username}
                             onChange={handleInputChange}
                             required
                         />
@@ -51,10 +61,7 @@ const Login = () => {
                             required
                         />
                     </div>
-                    <button type="submit" className="login-button">Connexion</button>
-                    <div className="login-register-link">
-                        <p>Don't have an account ? <span onClick={() => navigate('/register')}>Register</span></p>
-                    </div>
+                    <button type="submit" className="register-button">Register</button>
                 </form>
             </div>
 
@@ -63,4 +70,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default Register;

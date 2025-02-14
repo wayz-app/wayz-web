@@ -1,0 +1,54 @@
+/* Footer */
+.footer {
+    background-color: #333;
+    color: white;
+    padding: 15px 10px;
+    text-align: center;
+    font-size: 12px;
+}
+
+/* Footer Links */
+.footer a {
+    color: #ddd;
+    text-decoration: none;
+    margin: 0 8px;
+    font-size: 12px;
+    transition: color 0.3s;
+}
+
+.footer a:hover {
+    color: #00bfff; /* Light blue */
+}
+/* Legal */
+.legal-container {
+    max-width: 800px;
+    margin: 40px auto;
+    text-align: left;
+    font-size: 16px;
+}
+
+.legal-container h1 {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.legal-container h2 {
+    font-size: 22px;
+    margin-top: 20px;
+}
+
+.legal-container p,
+.legal-container ul {
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.legal-container a {
+    color: #00bfff;
+    text-decoration: none;
+}
+
+.legal-container a:hover {
+    text-decoration: underline;
+}
