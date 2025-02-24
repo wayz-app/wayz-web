@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/Login.css';
-import Header from '../components/Header'; 
-import Footer from '../components/Footer'; 
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 const Login = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
-        email: '',
+        username: '',
         password: ''
     });
 
@@ -16,10 +16,28 @@ const Login = () => {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Form submitted:', formData);
-        // Add your login logic here
+
+        try {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert(data.message || 'Login successful!');
+                navigate('/dashboard');  
+            } else {
+                alert(`Error: ${data.message || 'Login failed.'}`);
+            }
+        } catch (error) {
+            console.error('Error during login request:', error);
+            alert('An error has occurred.');
+        }
     };
 
     return (
@@ -30,16 +48,17 @@ const Login = () => {
                 <h1>Login</h1>
                 <form className="login-form" onSubmit={handleSubmit}>
                     <div className="form-group">
-                        <label htmlFor="email">Email</label>
+                        <label htmlFor="username">Username</label>
                         <input
                             type="text"
-                            id="email"
-                            name="email"
-                            value={formData.email}
+                            id="username"
+                            name="username"
+                            value={formData.username}
                             onChange={handleInputChange}
                             required
                         />
                     </div>
+
                     <div className="form-group">
                         <label htmlFor="password">Password</label>
                         <input
@@ -51,9 +70,11 @@ const Login = () => {
                             required
                         />
                     </div>
+
                     <button type="submit" className="login-button">Connexion</button>
+
                     <div className="login-register-link">
-                        <p>Don't have an account ? <span onClick={() => navigate('/register')}>Register</span></p>
+                        <p>Don't have an account? <span onClick={() => navigate('/register')}>Register</span></p>
                     </div>
                 </form>
             </div>

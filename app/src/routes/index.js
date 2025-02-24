@@ -4,6 +4,7 @@ import Home from '../views/Home';
 import About from '../views/About';
 import Login from '../views/Login';
 import Register from '../views/Register';
+import Dashboard from '../views/Dashboard';
 import LegalNotices from '../components/LegalNotices';
 import TermsOfService from '../components/TermsOfService';
 import PrivacyPolicy from '../components/PrivacyPolicy';
@@ -18,6 +19,7 @@ const AppRoutes = () => {
                 <Route path="/register" element={<Register />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/about" element={<About />} />
+                <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/legal-notices" element={<LegalNotices />} />
                 <Route path="/terms-of-service" element={<TermsOfService />} />
                 <Route path="/privacy-policy" element={<PrivacyPolicy />} />
