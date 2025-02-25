@@ -11,18 +11,23 @@ const Register = () => {
         password: '',
     });
 
+    const [errorMessage, setErrorMessage] = useState(''); // État pour gérer le message d'erreur
+    const [successMessage, setSuccessMessage] = useState(''); // État pour gérer le succès
+
     const navigate = useNavigate(); 
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
+        setErrorMessage(''); // Effacer les erreurs lorsqu'on modifie un champ
+        setSuccessMessage(''); // Effacer les messages de succès
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            const response = await fetch(`${process.env.REACT_APP_API_URL}/register`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/users/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
@@ -31,14 +36,15 @@ const Register = () => {
             const data = await response.json();
 
             if (response.ok) {
-                alert(data.message || 'Registration successful !');
-                navigate('/login'); 
+                setSuccessMessage(data.message || 'Registration successful!');
+                setErrorMessage('');
+                setTimeout(() => navigate('/login'), 1000); 
             } else {
-                alert(`Error: ${data.message || 'Registration failed.'}`);
+                setErrorMessage(data.message || 'Registration failed.');
             }
         } catch (error) {
             console.error('Error during query:', error);
-            alert('An error has occurred.');
+            setErrorMessage('An error has occurred. Please try again.');
         }
     };
 
@@ -47,6 +53,17 @@ const Register = () => {
             <Header />
             <div className="register-content">
                 <h1>Register</h1>
+
+                {/* Affichage des messages d'erreur */}
+                {errorMessage && (
+                    <div className="error-message">⚠️ {errorMessage}</div>
+                )}
+
+                {/* Affichage des messages de succès */}
+                {successMessage && (
+                    <div className="success-message">✅ {successMessage}</div>
+                )}
+
                 <form className="register-form" onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label htmlFor="username">Username</label>
@@ -59,6 +76,7 @@ const Register = () => {
                             required
                         />
                     </div>
+
                     <div className="form-group">
                         <label htmlFor="email">Email</label>
                         <input
@@ -70,6 +88,7 @@ const Register = () => {
                             required
                         />
                     </div>
+
                     <div className="form-group">
                         <label htmlFor="password">Password</label>
                         <input
@@ -81,6 +100,7 @@ const Register = () => {
                             required
                         />
                     </div>
+
                     <button type="submit" className="register-button">Register</button>
                 </form>
             </div>
