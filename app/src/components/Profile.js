@@ -12,7 +12,7 @@ const Profile = () => {
     const [user, setUser] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [formData, setFormData] = useState({ username: '', email: '' });
+    const [formData, setFormData] = useState({ firstname: '', lastname: '', username: '', email: '' });
     const [isSaving, setIsSaving] = useState(false);
 
     useEffect(() => {
@@ -51,7 +51,7 @@ const Profile = () => {
 
             if (response.ok) {
                 setUser(data.data);
-                setFormData({ username: data.data.username, email: data.data.email });
+                setFormData({ firstname: data.data.firstname, lastname: data.data.lastname, username: data.data.username, email: data.data.email });
             } else {
                 setErrorMessage(data.message || 'Failed to fetch user information.');
             }
@@ -96,6 +96,8 @@ const Profile = () => {
                     'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify({
+                    firstname: formData.firstname,
+                    lastname: formData.lastname,
                     username: formData.username,
                     email: formData.email,
                 }),
@@ -135,6 +137,8 @@ const Profile = () => {
 
                     {user ? (
                         <div className="user-details">
+                            <p><strong>Firstname:</strong> {user.firstname}</p>
+                            <p><strong>Lastname:</strong> {user.lastname}</p>
                             <p><strong>Username:</strong> {user.username}</p>
                             <p><strong>Email:</strong> {user.email}</p>
                         </div>
@@ -155,6 +159,20 @@ const Profile = () => {
                     <div className="modal-content">
                         <h2>Edit Profile</h2>
                         <div className="modal-body">
+                            <label>Firstname</label>
+                            <input
+                                type="text"
+                                name="firstname"
+                                value={formData.firstname}
+                                onChange={handleInputChange}
+                            />
+                            <label>Lastname</label>
+                            <input
+                                type="text"
+                                name="lastname"
+                                value={formData.lastname}
+                                onChange={handleInputChange}
+                            />
                             <label>Username</label>
                             <input
                                 type="text"

@@ -6,6 +6,8 @@ import Footer from '../components/Footer';
 
 const Register = () => {
     const [formData, setFormData] = useState({
+        firstname: '',
+        lastname: '',
         username: '',
         email: '',
         password: '',
@@ -65,6 +67,30 @@ const Register = () => {
                 )}
 
                 <form className="register-form" onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label htmlFor="firstname">Firstname</label>
+                        <input
+                            type="text"
+                            id="firstname"
+                            name="firstname"
+                            value={formData.firstname}
+                            onChange={handleInputChange}
+                            required
+                        />
+                    </div>
+                    
+                    <div className="form-group">
+                        <label htmlFor="lastname">Lastname</label>
+                        <input
+                            type="text"
+                            id="lastname"
+                            name="lastname"
+                            value={formData.lastname}
+                            onChange={handleInputChange}
+                            required
+                        />
+                    </div>
+                    
                     <div className="form-group">
                         <label htmlFor="username">Username</label>
                         <input
