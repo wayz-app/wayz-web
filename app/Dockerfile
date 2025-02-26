@@ -2,10 +2,17 @@ FROM node:21-alpine3.18
 
 WORKDIR /app
 
+ARG VERSION="dev"
+
+ENV REACT_APP_VERSION=${VERSION}
+
+COPY package.json package-lock.json ./
+RUN npm install
+
 COPY . .
 
-RUN npm install
+RUN npm run build
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["node", "server.js"]

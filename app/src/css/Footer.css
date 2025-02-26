@@ -52,3 +52,13 @@
 .legal-container a:hover {
     text-decoration: underline;
 }
+
+.app-info {
+    font-size: 0.8rem;
+    color: #888;
+    font-style: italic;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
