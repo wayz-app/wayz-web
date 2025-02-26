@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from '../views/Home';
 import About from '../views/About';
 import Login from '../views/Login';
+import Navigation from '../views/Navigation';
 import Register from '../views/Register';
 import Dashboard from '../views/Dashboard';
 import LegalNotices from '../components/LegalNotices';
@@ -29,6 +30,7 @@ const AppRoutes = () => {
                     } 
                 />
 
+                <Route path="/navigate" element={<Navigation />} />
                 <Route path="/legal-notices" element={<LegalNotices />} />
                 <Route path="/terms-of-service" element={<TermsOfService />} />
                 <Route path="/privacy-policy" element={<PrivacyPolicy />} />
