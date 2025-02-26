@@ -30,7 +30,7 @@ jobs:
       run: |
         TAG=$(echo ${GITHUB_REF#refs/tags/}) # Extract the tag
         IMAGE=ghcr.io/${{ github.repository }}
-        docker build -t $IMAGE:$TAG ./app
+        docker build --build-arg VERSION="$TAG" -t $IMAGE:$TAG ./app
         docker tag $IMAGE:$TAG $IMAGE:latest
 
     # Step 4: Push the Docker image with version tag
