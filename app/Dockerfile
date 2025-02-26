@@ -4,12 +4,15 @@ WORKDIR /app
 
 ARG VERSION="dev"
 
-ENV VERSION=${VERSION}
+ENV REACT_APP_VERSION=${VERSION}
+
+COPY package.json package-lock.json ./
+RUN npm install
 
 COPY . .
 
-RUN npm install
+RUN npm run build
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["node", "server.js"]
