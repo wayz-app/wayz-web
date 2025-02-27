@@ -46,11 +46,20 @@ jobs:
         IMAGE=ghcr.io/${{ github.repository }}
         docker push $IMAGE:latest
     
-    # Step 6: Update service in Portainer
-    - name: Use Portainer Service Webhook Action
-      uses: enzodjabali/portainer-service-update-action@v1
-      with:
-        portainer_url: "${{ secrets.PORTAINER_HOST }}"
-        api_key: "${{ secrets.PORTAINER_API_KEY }}"
-        endpoint_id: "1"
-        service_name: "wayz-preprod_web"
+    # Step 6: Trigger deployment update via Portainer
+    - name: Trigger deployment update
+      run: |
+        curl -X PATCH "https://portainer.edj-labs.com/api/endpoints/5/kubernetes/apis/apps/v1/namespaces/wayz-preprod/deployments/wayz-web-preprod" \
+           -H "X-API-Key: ${{ secrets.PORTAINER_API_KEY }}" \
+           -H "Content-Type: application/strategic-merge-patch+json" \
+           -d '{
+                 "spec": {
+                   "template": {
+                     "metadata": {
+                       "annotations": {
+                         "kubectl.kubernetes.io/restartedAt": "'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'"
+                       }
+                     }
+                   }
+                 }
+               }'
