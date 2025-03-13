@@ -49,7 +49,7 @@ jobs:
     # Step 6: Trigger deployment update via Portainer
     - name: Trigger deployment update
       run: |
-        curl -X PATCH "https://portainer.edj-labs.com/api/endpoints/5/kubernetes/apis/apps/v1/namespaces/wayz-preprod/deployments/wayz-web-preprod" \
+        curl -X PATCH "https://portainer.edj-labs.com/api/endpoints/2/kubernetes/apis/apps/v1/namespaces/wayz-preprod/deployments/wayz-web-preprod" \
            -H "X-API-Key: ${{ secrets.PORTAINER_API_KEY }}" \
            -H "Content-Type: application/strategic-merge-patch+json" \
            -d '{
