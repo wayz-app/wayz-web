@@ -101,7 +101,7 @@ const Dashboard = () => {
                 <div className="dashboard-cards">
                     <div className="dashboard-card">
                         <h2>📊 My Statistics</h2>
-                        <p>View detailed insights about your trips, reports, and app usage.</p>
+                        <p>View detailed about your trips, reports, and app usage.</p>
                         <button onClick={() => alert('Feature coming soon!')}>View Details</button>
                     </div>
 
