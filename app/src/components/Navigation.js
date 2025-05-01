@@ -10,6 +10,35 @@ import Footer from './Footer';
 import Header from './Header';
 import { QRCodeSVG } from 'qrcode.react'; // Import QR code library
 
+// Fonction pour formater la durée en jours, heures et minutes
+const formatDuration = (seconds) => {
+    // Calculer les jours, heures et minutes
+    const days = Math.floor(seconds / (24 * 3600));
+    seconds %= (24 * 3600);
+    
+    const hours = Math.floor(seconds / 3600);
+    seconds %= 3600;
+    
+    const minutes = Math.floor(seconds / 60);
+    
+    // Construire la chaîne de texte en fonction des valeurs
+    let durationString = "";
+    
+    if (days > 0) {
+        durationString += `${days} day${days > 1 ? 's' : ''} `;
+    }
+    
+    if (hours > 0 || days > 0) {
+        durationString += `${hours} hour${hours > 1 ? 's' : ''} `;
+    }
+    
+    if (minutes > 0 || hours > 0 || days > 0) {
+        durationString += `${minutes} min`;
+    }
+    
+    return durationString.trim();
+};
+
 const defaultIcon = L.icon({
     iconUrl: markerIconPng,
     shadowUrl: markerShadowPng,
@@ -178,7 +207,7 @@ const Navigation = () => {
                             <h3>📝 Route Summary</h3>
                             <div className="navigation-route-summary-paragraphs">
                                 <p><strong>Distance:</strong> {(summary.distance / 1000).toFixed(1)} km</p>
-                                <p><strong>Duration:</strong> {Math.floor(summary.duration / 60)} min {Math.round(summary.duration % 60)} s</p>
+                                <p><strong>Duration:</strong> {formatDuration(summary.duration)}</p>
                             </div>
                         </div>
                         <div className="navigation-qr-code">
