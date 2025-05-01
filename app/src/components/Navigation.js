@@ -1,52 +1,87 @@
-import React, { useState } from 'react';
-import { MapContainer, TileLayer, Marker, Polyline, useMapEvents } from 'react-leaflet';
+import React, { useState, useEffect } from 'react';
+import { MapContainer, TileLayer, Marker, Polyline, useMap, useMapEvents } from 'react-leaflet';
 import axios from 'axios';
 import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+import markerIconPng from 'leaflet/dist/images/marker-icon.png';
+import markerShadowPng from 'leaflet/dist/images/marker-shadow.png';
 import '../css/Navigation.css';
 import Footer from './Footer';
 import Header from './Header';
 
+const defaultIcon = L.icon({
+    iconUrl: markerIconPng,
+    shadowUrl: markerShadowPng,
+    iconAnchor: [12, 41], // pour centrer correctement
+});
+
+L.Marker.prototype.options.icon = defaultIcon;
+
+const startIcon = new L.Icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png',
+    shadowUrl: markerShadowPng,
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+});
+
+const endIcon = new L.Icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+    shadowUrl: markerShadowPng,
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+});
+
+const FitBounds = ({ start, end, route }) => {
+    const map = useMap();
+
+    useEffect(() => {
+        if (!start || !end || route.length === 0) return;
+
+        const bounds = L.latLngBounds(route);
+        map.fitBounds(bounds, { padding: [50, 50] }); // ajoute une marge
+    }, [start, end, route, map]);
+
+    return null;
+};
+
+
+
 const Navigation = () => {
-    const [start, setStart] = useState([48.8566, 2.3522]); // Paris (par défaut)
-    const [end, setEnd] = useState([48.8584, 2.2945]); // Tour Eiffel (par défaut)
+    const [start, setStart] = useState(null);
+    const [end, setEnd] = useState(null);
     const [route, setRoute] = useState([]);
     const [startInput, setStartInput] = useState('');
     const [endInput, setEndInput] = useState('');
     const [suggestions, setSuggestions] = useState({ start: [], end: [] });
+    const [summary, setSummary] = useState(null);
 
     const apiKey = process.env.REACT_APP_ORS_API_KEY;
 
     // Fonction pour récupérer l'itinéraire
     const getRoute = async () => {
-    const apiKey = process.env.REACT_APP_ORS_API_KEY;
-
-    // ⚠️ ORS attend l'ordre: longitude, latitude
-    const startCoords = `${start[1]},${start[0]}`;
-    const endCoords = `${end[1]},${end[0]}`;
-
-    const url = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${apiKey}&start=${startCoords}&end=${endCoords}`;
-
-    console.log("Requesting route from:", start, "to:", end);
-    console.log("Request URL:", url); // ✅ Debug
-
-    try {
-        const response = await axios.get(url);
-
-        if (!response.data.routes || response.data.routes.length === 0) {
-            console.error('No route found:', response.data);
-            alert("No route found. Try different locations.");
-            return;
+        const apiKey = process.env.REACT_APP_ORS_API_KEY;
+    
+        const startCoords = `${start[1]},${start[0]}`;
+        const endCoords = `${end[1]},${end[0]}`;
+    
+        const url = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${apiKey}&start=${startCoords}&end=${endCoords}`;
+    
+        try {
+            const response = await axios.get(url);
+            console.log(response.data);
+            const coordinates = response.data.features[0].geometry.coordinates.map(([lng, lat]) => [lat, lng]);
+            const summary = response.data.features[0].properties.summary;
+            setRoute(coordinates);
+            setSummary(summary); // <-- Ajouté ici
+        } catch (error) {
+            console.error('Error fetching route:', error);
+            alert("An error occurred while fetching the route.");
         }
-
-        // ✅ Convertir en Leaflet format
-        const coordinates = response.data.routes[0].geometry.coordinates.map(([lon, lat]) => [lat, lon]);
-        setRoute(coordinates);
-        console.log("Route coordinates:", coordinates);
-    } catch (error) {
-        console.error('Error fetching route:', error);
-        alert("An error occurred while fetching the route.");
-    }
-};
+    };
 
     // Fonction pour récupérer les suggestions de lieux
     const fetchSuggestions = async (query, type) => {
@@ -72,6 +107,8 @@ const Navigation = () => {
 
     // Fonction pour sélectionner une suggestion
     const selectLocation = (name, coords, type) => {
+        setRoute([]); // 🧽 Supprime la route existante dès qu'on change un point
+    
         if (type === 'start') {
             setStart(coords);
             setStartInput(name);
@@ -136,16 +173,25 @@ const Navigation = () => {
                 </div>
 
                 {/* Carte avec itinéraire */}
-                <MapContainer center={start} zoom={13} className="map-container">
+                <MapContainer center={[46.6031, 1.8883]} zoom={6} className="map-container">
                     <TileLayer
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         attribution="&copy; OpenStreetMap contributors"
                     />
-                    <Marker position={start} />
-                    <Marker position={end} />
+                    {start && <Marker position={start} icon={startIcon} />}
+                    {end && <Marker position={end} icon={endIcon} />}
                     {route.length > 0 && <Polyline positions={route} color="blue" />}
                     <MapClickHandler setStart={setStart} setEnd={setEnd} />
+                    <FitBounds start={start} end={end} route={route} />
                 </MapContainer>
+
+                {summary && (
+                    <div className="route-summary">
+                        <h3>📝 Route Summary</h3>
+                        <p><strong>Distance:</strong> {(summary.distance / 1000).toFixed(1)} km</p>
+                        <p><strong>Duration:</strong> {Math.floor(summary.duration / 60)} min {Math.round(summary.duration % 60)} s</p>
+                    </div>
+                )}
 
                 <div className="route-actions">
                     <button onClick={getRoute}>Generate Route</button>
