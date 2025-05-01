@@ -1,3 +1,5 @@
+version: '3'
+
 services:
   web:
     build:
@@ -6,3 +8,10 @@ services:
       - "3000:3000"
     environment:
       - REACT_APP_API_URL=https://api.preprod.wayz.ovh
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+      - WDS_SOCKET_PORT=3000
+      - FAST_REFRESH=true
+    volumes:
+      - ./app:/app
+      - /app/node_modules
