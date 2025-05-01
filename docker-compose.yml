@@ -4,10 +4,12 @@ services:
   web:
     build:
       context: ./app
+      dockerfile: Dockerfile.dev
     ports:
       - "3000:3000"
     environment:
       - REACT_APP_API_URL=https://api.preprod.wayz.ovh
+      - REACT_APP_ORS_API_KEY=5b3ce3597851110001cf6248e9095669c4e345e8b17826953808d978
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
       - WDS_SOCKET_PORT=3000
