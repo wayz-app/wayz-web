@@ -8,6 +8,7 @@ import markerShadowPng from 'leaflet/dist/images/marker-shadow.png';
 import '../css/Navigation.css';
 import Footer from './Footer';
 import Header from './Header';
+import { QRCodeSVG } from 'qrcode.react'; // Import QR code library
 
 const defaultIcon = L.icon({
     iconUrl: markerIconPng,
@@ -42,13 +43,11 @@ const FitBounds = ({ start, end, route }) => {
         if (!start || !end || route.length === 0) return;
 
         const bounds = L.latLngBounds(route);
-        map.fitBounds(bounds, { padding: [50, 50] }); // ajoute une marge
+        map.fitBounds(bounds, { padding: [50, 50] });
     }, [start, end, route, map]);
 
     return null;
 };
-
-
 
 const Navigation = () => {
     const [start, setStart] = useState(null);
@@ -72,18 +71,16 @@ const Navigation = () => {
     
         try {
             const response = await axios.get(url);
-            console.log(response.data);
             const coordinates = response.data.features[0].geometry.coordinates.map(([lng, lat]) => [lat, lng]);
             const summary = response.data.features[0].properties.summary;
             setRoute(coordinates);
-            setSummary(summary); // <-- Ajouté ici
+            setSummary(summary); 
         } catch (error) {
             console.error('Error fetching route:', error);
             alert("An error occurred while fetching the route.");
         }
     };
 
-    // Fonction pour récupérer les suggestions de lieux
     const fetchSuggestions = async (query, type) => {
         if (!query) return;
 
@@ -105,9 +102,8 @@ const Navigation = () => {
         }
     };
 
-    // Fonction pour sélectionner une suggestion
     const selectLocation = (name, coords, type) => {
-        setRoute([]); // 🧽 Supprime la route existante dès qu'on change un point
+        setRoute([]); 
     
         if (type === 'start') {
             setStart(coords);
@@ -123,13 +119,13 @@ const Navigation = () => {
     return (
         <>
             <Header />
-            <div className="navigate-content">
+            <div className="navigation-navigate-content">
                 <h1>🚗 Navigation</h1>
                 <p>Plan your route from the starting point to your destination.</p>
 
                 {/* Champs de recherche */}
-                <div className="search-container">
-                    <div className="search-box">
+                <div className="navigation-search-container">
+                    <div className="navigation-search-box">
                         <input
                             type="text"
                             placeholder="Enter start location"
@@ -140,9 +136,9 @@ const Navigation = () => {
                             }}
                         />
                         {suggestions.start.length > 0 && (
-                            <div className="suggestions">
+                            <div className="navigation-suggestions">
                                 {suggestions.start.map((item, index) => (
-                                    <div key={index} className="suggestion" onClick={() => selectLocation(item.name, item.coords, 'start')}>
+                                    <div key={index} className="navigation-suggestion" onClick={() => selectLocation(item.name, item.coords, 'start')}>
                                         {item.name}
                                     </div>
                                 ))}
@@ -150,7 +146,7 @@ const Navigation = () => {
                         )}
                     </div>
 
-                    <div className="search-box">
+                    <div className="navigation-search-box">
                         <input
                             type="text"
                             placeholder="Enter destination"
@@ -161,19 +157,44 @@ const Navigation = () => {
                             }}
                         />
                         {suggestions.end.length > 0 && (
-                            <div className="suggestions">
+                            <div className="navigation-suggestions">
                                 {suggestions.end.map((item, index) => (
-                                    <div key={index} className="suggestion" onClick={() => selectLocation(item.name, item.coords, 'end')}>
+                                    <div key={index} className="navigation-suggestion" onClick={() => selectLocation(item.name, item.coords, 'end')}>
                                         {item.name}
                                     </div>
                                 ))}
                             </div>
                         )}
                     </div>
+
+                    <div className="navigation-route-actions">
+                        <button onClick={getRoute}>Generate Route</button>
+                    </div>
                 </div>
 
-                {/* Carte avec itinéraire */}
-                <MapContainer center={[46.6031, 1.8883]} zoom={6} className="map-container">
+                {summary && (
+                    <div className="navigation-route-summary-container">
+                        <div className="navigation-route-summary">
+                            <h3>📝 Route Summary</h3>
+                            <div className="navigation-route-summary-paragraphs">
+                                <p><strong>Distance:</strong> {(summary.distance / 1000).toFixed(1)} km</p>
+                                <p><strong>Duration:</strong> {Math.floor(summary.duration / 60)} min {Math.round(summary.duration % 60)} s</p>
+                            </div>
+                        </div>
+                        <div className="navigation-qr-code">
+                            <QRCodeSVG 
+                                value="https://www.google.com" 
+                                size={128} 
+                                bgColor="#ffffff" 
+                                fgColor="#000000" 
+                                level="L" 
+                                includeMargin={false}
+                            />
+                        </div>
+                    </div>
+                )}
+
+                <MapContainer center={[46.6031, 1.8883]} zoom={6} className="navigation-map-container">
                     <TileLayer
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         attribution="&copy; OpenStreetMap contributors"
@@ -184,18 +205,6 @@ const Navigation = () => {
                     <MapClickHandler setStart={setStart} setEnd={setEnd} />
                     <FitBounds start={start} end={end} route={route} />
                 </MapContainer>
-
-                {summary && (
-                    <div className="route-summary">
-                        <h3>📝 Route Summary</h3>
-                        <p><strong>Distance:</strong> {(summary.distance / 1000).toFixed(1)} km</p>
-                        <p><strong>Duration:</strong> {Math.floor(summary.duration / 60)} min {Math.round(summary.duration % 60)} s</p>
-                    </div>
-                )}
-
-                <div className="route-actions">
-                    <button onClick={getRoute}>Generate Route</button>
-                </div>
             </div>
             <Footer />
         </>
