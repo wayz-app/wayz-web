@@ -1,0 +1,196 @@
+.navigation-navigate-content {
+    text-align: center;
+    padding: 40px 20px;
+    max-width: 75%;
+    margin: 0 auto;
+}
+
+.navigation-navigate-content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.navigation-navigate-content p {
+    color: #555;
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+}
+
+.navigation-search-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    margin-bottom: 20px;
+    align-items: baseline;
+    width: 100%;
+    justify-content: space-between;
+    position: relative;
+}
+
+.navigation-search-box {
+    position: relative;
+    width: 40%;
+}
+
+.navigation-search-box input {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: border 0.3s ease;
+}
+
+.navigation-search-box input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.navigation-suggestions {
+    position: absolute;
+    width: 100%;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    max-height: 160px;
+    overflow-y: auto;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    z-index: 1500;
+}
+
+.navigation-suggestion {
+    padding: 10px;
+    cursor: pointer;
+    text-align: left;
+}
+
+.navigation-suggestion:hover {
+    background: #f7f7f7;
+}
+
+.navigation-map-container {
+    height: 500px;
+    width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    margin: 30px auto;
+    position: relative;
+    z-index: 1;
+}
+
+.navigation-route-actions {
+    margin-top: 20px;
+}
+
+.navigation-route-actions button {
+    padding: 12px 24px;
+    font-size: 16px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.navigation-route-actions button:hover {
+    background: #0056b3;
+}
+
+/* Updated styles for summary and QR code */
+.navigation-route-summary-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+    margin: 20px auto;
+    max-width: 800px;
+    flex-wrap: wrap;
+}
+
+.navigation-route-summary {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    flex: 1;
+    min-width: 300px;
+    text-align: left;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.navigation-route-summary h3 {
+    margin-bottom: 10px;
+    margin-top: 5px;
+    font-size: 1.4rem;
+    color: #333;
+}
+
+.navigation-route-summary-paragraphs {
+    padding: 8px 0;
+}
+
+.navigation-route-summary p {
+    margin: 5px 0;
+    font-size: 1rem;
+    color: #444;
+    padding: 4px 0;
+}
+
+.navigation-qr-code {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+.navigation-qr-code h3 {
+    margin-bottom: 15px;
+    font-size: 1.4rem;
+    color: #333;
+}
+
+.navigation-top-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.leaflet-control {
+    z-index: 800 !important;
+}
+
+.leaflet-top, 
+.leaflet-bottom {
+    z-index: 900 !important;
+}
+
+@media (max-width: 768px) {
+    .navigation-top-container,
+    .navigation-route-summary-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .navigation-search-container,
+    .navigation-route-summary,
+    .navigation-qr-code {
+        width: 100%;
+    }
+
+    .navigation-route-summary {
+        border-right: none;
+        border-bottom: 1px solid #edf2f7;
+    }
+
+    .navigation-search-box {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
