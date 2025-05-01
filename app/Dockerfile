@@ -5,14 +5,12 @@ WORKDIR /app
 ARG VERSION="dev"
 
 ENV REACT_APP_VERSION=${VERSION}
+ENV WATCHPACK_POLLING=true
+ENV CHOKIDAR_USEPOLLING=true
 
 COPY package.json package-lock.json ./
 RUN npm install
 
-COPY . .
-
-RUN npm run build
-
 EXPOSE 3000
 
-CMD ["node", "server.js"]
+CMD ["npm", "start"]
