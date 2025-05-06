@@ -10,7 +10,7 @@ const Dashboard = () => {
     const [userId, setUserId] = useState('');
     const [username, setUsername] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
-    const [loading, setLoading] = useState(true); // Ajout d'un état de chargement
+    const [loading, setLoading] = useState(true); 
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -102,7 +102,7 @@ const Dashboard = () => {
                     <div className="dashboard-card">
                         <h2>📊 My Statistics</h2>
                         <p>View detailed about your trips, reports, and app usage.</p>
-                        <button onClick={() => alert('Feature coming soon!')}>View Details</button>
+                        <button onClick={() => navigate('/statistics')}>View Statistics</button>
                     </div>
 
                     <div className="dashboard-card">

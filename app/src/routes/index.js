@@ -6,6 +6,7 @@ import Login from '../views/Login';
 import Navigation from '../views/Navigation';
 import Register from '../views/Register';
 import Profile from '../views/Profile';
+import Statistics from '../views/Statistics';
 import Dashboard from '../views/Dashboard';
 import LegalNotices from '../components/LegalNotices';
 import TermsOfService from '../components/TermsOfService';
@@ -36,6 +37,15 @@ const AppRoutes = () => {
                     element={
                         <PrivateRoute>
                             <Profile />
+                        </PrivateRoute>
+                    } 
+                />
+               
+                <Route 
+                    path="/statistics" 
+                    element={
+                        <PrivateRoute>
+                            <Statistics />
                         </PrivateRoute>
                     } 
                 />
