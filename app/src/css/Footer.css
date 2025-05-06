@@ -1,64 +1,91 @@
-/* Footer */
 .footer {
-    background-color: #333;
+    background-color: #1b1b83;
     color: white;
-    padding: 15px 10px;
+    padding: 1.5rem;
     text-align: center;
-    font-size: 12px;
+    font-size: 0.9rem;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Footer Links */
-.footer a {
-    color: #ddd;
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-main {
+    margin-bottom: 1rem;
+}
+
+.copyright {
+    margin-bottom: 0.8rem;
+    font-weight: 500;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.footer-links a {
+    color: #ffffff;
     text-decoration: none;
-    margin: 0 8px;
-    font-size: 12px;
     transition: color 0.3s;
 }
 
-.footer a:hover {
-    color: #00bfff; /* Light blue */
-}
-/* Legal */
-.legal-container {
-    max-width: 800px;
-    margin: 40px auto;
-    text-align: left;
-    font-size: 16px;
+.footer-links a:hover {
+    color: #FF6B00;
 }
 
-.legal-container h1 {
-    font-size: 28px;
-    font-weight: bold;
-    margin-bottom: 20px;
-}
-
-.legal-container h2 {
-    font-size: 22px;
-    margin-top: 20px;
-}
-
-.legal-container p,
-.legal-container ul {
-    line-height: 1.6;
-    margin-bottom: 15px;
-}
-
-.legal-container a {
-    color: #00bfff;
-    text-decoration: none;
-}
-
-.legal-container a:hover {
-    text-decoration: underline;
+.footer-divider {
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0 0.2rem;
 }
 
 .app-info {
-    font-size: 0.8rem;
-    color: #888;
-    font-style: italic;
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 0.8rem;
+    border-radius: 8px;
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.info-item {
+    display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 0.5rem;
+}
+
+.info-label {
+    font-weight: 600;
+}
+
+.legal-container {
+    margin: 10px;
+}
+
+@media (max-width: 768px) {
+    .footer {
+        padding: 1.2rem;
+    }
+    
+    .footer-links {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .footer-divider {
+        display: none;
+    }
+    
+    .app-info {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
 }

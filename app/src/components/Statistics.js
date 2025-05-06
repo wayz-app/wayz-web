@@ -125,46 +125,46 @@ const Statistics = () => {
         <>
             <Header />
             <div className="statistics-content">
-                <div className="breadcrumb">
-                    <span onClick={() => navigate('/dashboard')} className="breadcrumb-link">Dashboard</span>
-                    <span className="breadcrumb-separator"> / </span>
-                    <span onClick={() => navigate('/profile')} className="breadcrumb-link">Profile</span>
+                <div className="statistics-breadcrumb">
+                    <span onClick={() => navigate('/dashboard')} className="statistics-breadcrumb-link">Dashboard</span>
+                    <span className="statistics-breadcrumb-separator"> / </span>
+                    <span onClick={() => navigate('/statistics')} className="statistics-breadcrumb-link">My statistics</span>
                 </div>
 
                 <h1>📊 My Statistics</h1>
                 <p>View detailed statistics about your events and activities.</p>
 
-                {error && <div className="error-message">⚠️ {error}</div>}
+                {error && <div className="statistics-error-message">⚠️ {error}</div>}
                 
                 {loading ? (
-                    <div className="loading-container">
-                        <div className="loading-spinner"></div>
+                    <div className="statistics-loading-container">
+                        <div className="statistics-loading-spinner"></div>
                         <p>Loading your statistics...</p>
                     </div>
                 ) : statistics ? (
                     <div className="statistics-dashboard">
                         <div className="statistics-cards">
-                            <div className="stat-card total-events">
-                                <div className="stat-icon">📝</div>
-                                <div className="stat-content">
+                            <div className="statistics-stat-card statistics-total-events">
+                                <div className="statistics-stat-icon">📝</div>
+                                <div className="statistics-stat-content">
                                     <h3>Total Events</h3>
-                                    <div className="stat-value">{statistics.total_events}</div>
+                                    <div className="statistics-stat-value">{statistics.total_events}</div>
                                 </div>
                             </div>
                             
-                            <div className="stat-card monthly-events">
-                                <div className="stat-icon">🗓️</div>
-                                <div className="stat-content">
+                            <div className="statistics-stat-card statistics-monthly-events">
+                                <div className="statistics-stat-icon">🗓️</div>
+                                <div className="statistics-stat-content">
                                     <h3>Events This Month</h3>
-                                    <div className="stat-value">{statistics.events_this_month}</div>
+                                    <div className="statistics-stat-value">{statistics.events_this_month}</div>
                                 </div>
                             </div>
                             
-                            <div className="stat-card user-info">
-                                <div className="stat-icon">👤</div>
-                                <div className="stat-content">
+                            <div className="statistics-stat-card statistics-user-info">
+                                <div className="statistics-stat-icon">👤</div>
+                                <div className="statistics-stat-content">
                                     <h3>User</h3>
-                                    <div className="stat-value">{statistics.username}</div>
+                                    <div className="statistics-stat-value">{statistics.username}</div>
                                 </div>
                             </div>
                         </div>
@@ -172,7 +172,7 @@ const Statistics = () => {
                         {renderEventTypeChart()}
                     </div>
                 ) : (
-                    <div className="no-data-message">
+                    <div className="statistics-no-data-message">
                         <p>No statistics available. Start by creating some events!</p>
                     </div>
                 )}

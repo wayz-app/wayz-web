@@ -1,155 +1,205 @@
 /* General Layout */
 .about-container {
-    text-align: center;
-    padding: 40px 20px 0 20px;
-    margin: 0 100px;
-    color: #333;
+    padding: 2rem;
+    min-height: 70vh;
+    color: #1A1A2E;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .about-title {
-    font-size: 36px;
+    font-size: 2.5rem;
     font-weight: bold;
-    margin-bottom: 20px;
+    color: #1b1b83;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    position: relative;
+    display: inline-block;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.about-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background-color: #FF6B00;
+    border-radius: 2px;
 }
 
 .about-description {
-    font-size: 18px;
-    margin-bottom: 40px;
-    color: #666;
+    font-size: 1.2rem;
+    margin-bottom: 3rem;
+    color: #555;
+    text-align: center;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+}
+
+.about-description strong {
+    color: #1b1b83;
 }
 
 /* Grid Layout */
 .about-grid {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 130px;
-    margin-bottom: 60px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
 }
 
 .about-item {
     background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    width: 300px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     text-align: center;
-    transition: transform 0.2s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .about-item:hover {
-    transform: scale(1.05);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
 .about-item h3 {
-    font-size: 22px;
-    color: #333;
-    margin-bottom: 15px;
+    font-size: 1.3rem;
+    color: #1b1b83;
+    margin-bottom: 1rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+.about-item h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 3px;
+    background-color: #FF6B00;
+    border-radius: 2px;
 }
 
 .about-item p {
-    font-size: 18px;
-    color: #666;
-    font-weight: 500;
+    font-size: 1rem;
+    color: #555;
 }
 
 .about-value {
-    font-size: 24px;
-    font-weight: bold;
-    color: #6e6e6e;
+    color: #FF6B00;
+    font-weight: 600;
 }
 
 /* Statistics Section */
-.statistics-section {
-    background: #f8f9fa;
-    border-radius: 15px;
-    padding: 40px 20px;
-    margin: 60px 0;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+.about-statistics-section {
+    margin: 3rem 0;
 }
 
-.section-title {
-    font-size: 28px;
+.about-section-title {
+    font-size: 1.8rem;
     font-weight: bold;
-    margin-bottom: 30px;
+    color: #1b1b83;
+    margin-bottom: 2rem;
     text-align: center;
+    position: relative;
+    display: inline-block;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.about-section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background-color: #FF6B00;
+    border-radius: 2px;
 }
 
 /* Statistics Container */
-.statistics-container {
+.about-statistics-container {
     display: flex;
     flex-direction: column;
-    gap: 25px;
-    margin-top: 30px;
-    padding: 0;
+    gap: 1.5rem;
+    margin-top: 2rem;
 }
 
 /* Statistics Rows */
-.statistics-row {
+.about-statistics-row {
     display: flex;
-    gap: 25px;
+    gap: 1.5rem;
     width: 100%;
 }
 
 /* First row - side by side metrics */
-.statistics-row:first-child {
+.about-statistics-row:first-child {
     justify-content: space-between;
-    height: auto;
 }
 
-.statistics-row:first-child .stat-card {
+.about-statistics-row:first-child .about-stat-card {
     flex: 1;
-    max-width: calc(50% - 12.5px);
-    height: 180px;
+    max-width: calc(50% - 0.75rem);
+    height: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding: 2rem;
 }
 
 /* Second row - charts */
-.statistics-row:nth-child(2) {
+.about-statistics-row:nth-child(2) {
     height: auto;
 }
 
-.statistics-row:nth-child(2) .stat-card {
+.about-statistics-row:nth-child(2) .about-stat-card {
     flex: 1;
-    max-width: calc(50% - 12.5px);
-    height: 350px;
-    padding-top: 20px;
+    max-width: calc(50% - 0.75rem);
+    height: auto;
+    padding: 1.5rem;
     text-align: left;
 }
 
 /* Third row - map (full width) */
-.statistics-row.map-row {
+.about-statistics-row.map-row {
     height: 450px; 
-    margin-bottom: 0;
 }
 
-.statistics-row.map-row .stat-card {
+.about-statistics-row.map-row .about-stat-card {
     flex: 1;
     width: 100%;
-    padding-bottom: 25px;
+    padding: 1.5rem;
 }
 
 /* Card Styling */
-.stat-card {
+.about-stat-card {
     background: white;
-    border-radius: 15px;
-    padding: 25px 30px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.05);
     display: flex;
     flex-direction: column;
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.stat-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+.about-stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
 }
 
-.stat-card.hotspots {
+.about-stat-card.hotspots {
     padding-bottom: 0; 
     height: 100%; 
     display: flex;
@@ -157,149 +207,144 @@
 }
 
 /* Card Heading and Values */
-.statistics-row:first-child .stat-card h3 {
-    font-size: 18px;
-    margin-bottom: 10px;
+.about-stat-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
     font-weight: 600;
+    color: #1b1b83;
     text-align: center;
 }
 
-.statistics-row:first-child .stat-value {
-    font-size: 46px;
-    font-weight: 600;
-    margin: 5px 0 10px;
+.about-statistics-row:first-child .about-stat-value {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin: 0.75rem 0;
+    text-align: center;
 }
 
-.statistics-row:first-child p {
-    font-size: 14px;
+.about-statistics-row:first-child p {
+    font-size: 1rem;
     color: #666;
+    text-align: center;
 }
 
-.statistics-row:nth-child(2) .stat-card h3 {
-    font-size: 18px;
-    margin-bottom: 20px;
-    text-align: left;
-    font-weight: 600;
-}
-
-.stat-value {
-    font-size: 42px;
+.about-stat-value {
+    font-size: 2.5rem;
     font-weight: bold;
-    margin: 10px 0;
+    margin: 0.5rem 0;
 }
 
-.total-reports .stat-value {
-    color: #0088FE;
+.about-total-reports .about-stat-value {
+    color: #4285F4;
 }
 
-.total-locations .stat-value {
-    color: #00C49F;
+.about-total-locations .about-stat-value {
+    color: #34A853;
 }
 
 /* Report Types Styling */
-.report-types-list {
+.about-report-types-list {
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    margin-top: 10px;
-    padding: 0;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+    padding: 0 0.5rem;
     text-align: left;
     flex-grow: 1;
     overflow-y: auto;
     max-height: 280px;
+    width: 100%;
 }
 
-.report-type-item {
+.about-report-type-item {
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    margin-bottom: 15px;
+    gap: 0.5rem;
 }
 
-.report-type-header {
+.about-report-type-header {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 0.75rem;
 }
 
-.report-type-dot {
-    width: 12px;
-    height: 12px;
+.about-report-type-dot {
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     flex-shrink: 0;
 }
 
-.report-type-name {
-    font-size: 14px;
+.about-report-type-name {
+    font-size: 0.95rem;
     font-weight: 500;
     color: #333;
 }
 
-.report-type-bar-container {
+.about-report-type-bar-container {
     position: relative;
     height: 24px;
-    background-color: #f3f3f3;
+    background-color: #f5f5f5;
     border-radius: 12px;
     overflow: hidden;
-    margin-top: 5px;
 }
 
-.report-type-bar {
+.about-report-type-bar {
     height: 100%;
     border-radius: 12px;
     transition: width 1s ease-out;
 }
 
-.report-type-value {
+.about-report-type-value {
     position: absolute;
     right: 12px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 12px;
+    font-size: 0.8rem;
     font-weight: 500;
     color: #333;
 }
 
 /* Top Reporters Styling */
-.reporters-list {
+.about-reporters-list {
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    margin-top: 10px;
-    padding: 0;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+    padding: 0 0.5rem;
     text-align: left;
     flex-grow: 1;
     overflow-y: auto;
     max-height: 280px;
+    width: 100%;
 }
 
-.reporter-item {
+.about-reporter-item {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    margin-bottom: 15px;
+    gap: 0.5rem;
 }
 
-.reporter-header {
+.about-reporter-header {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 0.75rem;
 }
 
-.reporter-avatar {
-    width: 28px;
-    height: 28px;
+.about-reporter-avatar {
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
     font-weight: bold;
-    font-size: 14px;
+    font-size: 0.8rem;
 }
 
-.reporter-name {
-    font-size: 14px;
+.about-reporter-name {
+    font-size: 0.95rem;
     font-weight: 500;
     color: #333;
     white-space: nowrap;
@@ -308,71 +353,73 @@
     max-width: calc(100% - 50px);
 }
 
-.reporter-bar-container {
+.about-reporter-bar-container {
     position: relative;
     height: 24px;
-    background-color: #f3f3f3;
+    background-color: #f5f5f5;
     border-radius: 12px;
     overflow: hidden;
-    margin-top: 5px;
 }
 
-.reporter-bar {
+.about-reporter-bar {
     height: 100%;
     border-radius: 12px;
     transition: width 1s ease-out;
 }
 
-.reporter-value {
+.about-reporter-value {
     position: absolute;
     right: 12px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 12px;
+    font-size: 0.8rem;
     font-weight: 500;
     color: #333;
 }
 
 /* Hotspots Map Styling */
-.hotspots-map-container {
+.about-hotspots-map-container {
     width: 100%;
     height: 90%;
     border-radius: 8px;
     overflow: hidden;
-    margin-top: 5px;
+    margin-top: 0.5rem;
     flex-grow: 1;
-    margin-bottom: 0; 
 }
 
-.no-data-message {
+.about-no-data-message {
     color: #666;
     font-style: italic;
-    padding: 20px 0;
+    padding: 2rem 0;
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
 }
 
-.statistics-loading,
-.statistics-error {
-    padding: 40px;
+.about-statistics-loading,
+.about-statistics-error {
+    padding: 2.5rem;
     text-align: center;
     background: white;
     border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    box-shadow: 0 1px 8px rgba(0,0,0,0.05);
 }
 
-.statistics-error {
+.about-statistics-error {
     color: #e74c3c;
 }
 
 /* Leaflet custom styles */
-.leaflet-container {
+.about-leaflet-container {
     font-family: inherit;
     height: 100% !important; 
     width: 100% !important;
     margin-bottom: 0 !important;
 }
 
-.leaflet-tooltip {
+.about-leaflet-tooltip {
     background: rgba(255, 255, 255, 0.9);
     border: none;
     border-radius: 6px;
@@ -382,86 +429,93 @@
     text-align: center;
 }
 
-.leaflet-tooltip-top:before {
+.about-leaflet-tooltip-top:before {
     border-top-color: rgba(255, 255, 255, 0.9);
 }
 
-.leaflet-control-zoom a {
+.about-leaflet-control-zoom a {
     color: #333;
 }
 
 /* Make sure leaflet controls stay below our UI elements */
-.leaflet-control {
+.about-leaflet-control {
     z-index: 800 !important;
 }
 
-.leaflet-top, 
-.leaflet-bottom {
+.about-leaflet-top, 
+.about-leaflet-bottom {
     z-index: 900 !important;
 }
 
 /* Make sure our suggestions dropdown is on top of map */
-.navigation-suggestions {
+.about-navigation-suggestions {
     z-index: 1500;
 }
 
-/* Responsive adjustments */
-@media (max-width: 1200px) {
-    .about-container {
-        margin: 0 50px;
-    }
-    
-    .about-grid {
-        justify-content: center;
-    }
+/* Loading spinner */
+.about-statistics-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
 }
 
+.about-loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-left: 4px solid #1b1b83;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive adjustments */
 @media (max-width: 992px) {
-    .statistics-row {
+    .about-statistics-row {
         flex-direction: column;
         height: auto !important;
     }
     
-    .statistics-row:first-child .stat-card,
-    .statistics-row:nth-child(2) .stat-card {
+    .about-statistics-row:first-child .about-stat-card,
+    .about-statistics-row:nth-child(2) .about-stat-card {
         max-width: 100%;
-        margin-bottom: 25px;
+        margin-bottom: 1.5rem;
     }
     
-    .stat-card {
-        min-height: 200px;
+    .about-stat-card {
+        min-height: auto;
     }
     
-    .hotspots-map-container {
+    .about-hotspots-map-container {
         height: 350px;
     }
 }
 
 @media (max-width: 768px) {
     .about-container {
-        margin: 0 20px;
-        padding: 40px 10px;
+        padding: 1.5rem;
     }
     
     .about-title {
-        font-size: 28px;
+        font-size: 2rem;
     }
     
-    .section-title {
-        font-size: 24px;
+    .about-description {
+        font-size: 1rem;
     }
     
-    .timeline {
-        padding-left: 30px;
+    .about-section-title {
+        font-size: 1.5rem;
     }
     
-    .timeline-circle {
-        width: 35px;
-        height: 35px;
-        font-size: 16px;
-    }
-    
-    .timeline-step p {
-        font-size: 16px;
+    .about-statistics-row:first-child .about-stat-value {
+        font-size: 2.8rem;
     }
 }

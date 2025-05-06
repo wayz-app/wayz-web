@@ -12,17 +12,36 @@ const Header = () => {
     }, []);
 
     return (
-        <header className="sticky-header">
-            <nav>
-                <ul>
-                    <li onClick={() => navigate('/')}>Home</li>
-                    <li onClick={() => navigate('/about')}>About</li>
-                    <li onClick={() => navigate('/navigate')}>Navigate</li>
-                    <li onClick={() => navigate(isLoggedIn ? '/dashboard' : '/login')}>
-                        {isLoggedIn ? 'Dashboard' : 'Login'}
-                    </li>
-                </ul>
-            </nav>
+        <header className="header">
+            <div className="header-content">
+                <div className="header-name" onClick={() => navigate('/')}>Wayz</div>
+                
+                <div className="header-links">
+                    <nav>
+                        <ul>
+                            <li onClick={() => navigate('/')}>Home</li>
+                            <li onClick={() => navigate('/about')}>About</li>
+                            <li onClick={() => navigate('/navigate')}>Navigate</li>
+                        </ul>
+                    </nav>
+                    
+                    {isLoggedIn ? (
+                        <button 
+                            className="header-profile"
+                            onClick={() => navigate('/dashboard')}
+                        >
+                            My Profile
+                        </button>
+                    ) : (
+                        <button 
+                            className="header-login"
+                            onClick={() => navigate('/login')}
+                        >
+                            Login
+                        </button>
+                    )}
+                </div>
+            </div>
         </header>
     );
 };

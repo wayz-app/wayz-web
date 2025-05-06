@@ -48,9 +48,9 @@ const formatDuration = (seconds) => {
 };
 
 const startIcon = L.divIcon({
-    className: 'custom-div-icon',
+    className: 'navigation-custom-div-icon',
     html: `
-        <div class="marker-pin marker-pin-start">
+        <div class="navigation-marker-pin navigation-marker-pin-start">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="white">
                 <path d="M12,2C8.13,2 5,5.13 5,9c0,5.25 7,13 7,13s7,-7.75 7,-13c0,-3.87 -3.13,-7 -7,-7zM12,11.5c-1.38,0 -2.5,-1.12 -2.5,-2.5s1.12,-2.5 2.5,-2.5 2.5,1.12 2.5,2.5 -1.12,2.5 -2.5,2.5z"/>
             </svg>
@@ -62,9 +62,9 @@ const startIcon = L.divIcon({
 });
 
 const endIcon = L.divIcon({
-    className: 'custom-div-icon',
+    className: 'navigation-custom-div-icon',
     html: `
-        <div class="marker-pin marker-pin-end">
+        <div class="navigation-marker-pin navigation-marker-pin-end">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="white">
                 <path d="M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z"/>
             </svg>
@@ -101,6 +101,8 @@ const Navigation = () => {
     const [suggestions, setSuggestions] = useState({ start: [], end: [] });
     const [summary, setSummary] = useState(null);
     const [mapKey, setMapKey] = useState(Date.now()); 
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
     const apiKey = process.env.REACT_APP_ORS_API_KEY;
 
@@ -122,9 +124,12 @@ const Navigation = () => {
 
     const getRoute = async () => {
         if (!start || !end) {
-            alert("Please select both start and destination points");
+            setError("Please select both start and destination points");
             return;
         }
+
+        setLoading(true);
+        setError('');
 
         const startCoords = `${start[1]},${start[0]}`;
         const endCoords = `${end[1]},${end[0]}`;
@@ -137,9 +142,11 @@ const Navigation = () => {
             const summary = response.data.features[0].properties.summary;
             setRoute(coordinates);
             setSummary(summary); 
+            setLoading(false);
         } catch (error) {
             console.error('Error fetching route:', error);
-            alert("An error occurred while fetching the route.");
+            setError("An error occurred while fetching the route. Please try again.");
+            setLoading(false);
         }
     };
 
@@ -238,46 +245,54 @@ const Navigation = () => {
                     </div>
 
                     <div className="navigation-route-actions">
-                        <button onClick={getRoute}>Generate Route</button>
+                        <button onClick={getRoute} disabled={loading}>
+                            {loading ? 'Calculating...' : 'Generate Route'}
+                        </button>
                     </div>
                 </div>
+
+                {error && (
+                    <div className="navigation-error">
+                        <p>{error}</p>
+                    </div>
+                )}
 
                 {summary && (
                     <div className="navigation-route-summary-container">
                         <div className="navigation-route-summary">
-                            <div className="summary-header">
+                            <div className="navigation-summary-header">
                                 <h3>Route Summary</h3>
                             </div>
-                            <div className="summary-body">
-                                <div className="summary-item">
-                                    <div className="summary-item-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="#333">
+                            <div className="navigation-summary-body">
+                                <div className="navigation-summary-item">
+                                    <div className="navigation-summary-item-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="#1b1b83">
                                             <path d="M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z" />
                                         </svg>
                                     </div>
-                                    <div className="summary-item-content">
-                                        <span className="summary-label">Distance</span>
-                                        <span className="summary-value">{(summary.distance / 1000).toFixed(1)} km</span>
+                                    <div className="navigation-summary-item-content">
+                                        <span className="navigation-summary-label">Distance</span>
+                                        <span className="navigation-summary-value">{(summary.distance / 1000).toFixed(1)} km</span>
                                     </div>
                                 </div>
-                                <div className="summary-item">
-                                    <div className="summary-item-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="#333">
+                                <div className="navigation-summary-item">
+                                    <div className="navigation-summary-item-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="#1b1b83">
                                             <path d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z" />
                                         </svg>
                                     </div>
-                                    <div className="summary-item-content">
-                                        <span className="summary-label">Duration</span>
-                                        <span className="summary-value">{formatDuration(summary.duration)}</span>
+                                    <div className="navigation-summary-item-content">
+                                        <span className="navigation-summary-label">Duration</span>
+                                        <span className="navigation-summary-value">{formatDuration(summary.duration)}</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div className="navigation-qr-code">
-                            <div className="qr-header">
+                            <div className="navigation-qr-header">
                                 <h3>Share Route</h3>
                             </div>
-                            <div className="qr-container">
+                            <div className="navigation-qr-container">
                                 <QRCodeSVG 
                                     value={`https://www.google.com/maps/dir/?api=1&origin=${start?.[0]},${start?.[1]}&destination=${end?.[0]},${end?.[1]}`}
                                     size={140} 
@@ -291,7 +306,7 @@ const Navigation = () => {
                     </div>
                 )}
 
-                <div className="navigation-map-wrapper" style={{ height: '500px', width: '100%' }}>
+                <div className="navigation-map-wrapper">
                     <MapContainer 
                         key={mapKey}
                         center={[46.6031, 1.8883]} 
@@ -305,7 +320,7 @@ const Navigation = () => {
                         />
                         {start && <Marker position={start} icon={startIcon} />}
                         {end && <Marker position={end} icon={endIcon} />}
-                        {route.length > 0 && <Polyline positions={route} color="blue" />}
+                        {route.length > 0 && <Polyline positions={route} color="#1b1b83" weight={5} opacity={0.7} />}
                         <MapClickHandler />
                         <FitBounds start={start} end={end} route={route} />
                     </MapContainer>
