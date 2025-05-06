@@ -12,6 +12,7 @@ import LegalNotices from '../components/LegalNotices';
 import TermsOfService from '../components/TermsOfService';
 import PrivacyPolicy from '../components/PrivacyPolicy';
 import PrivateRoute from '../components/PrivateRoute';
+import AuthRedirect from '../components/AuthRedirect';
 
 const AppRoutes = () => {
     return (
@@ -21,6 +22,7 @@ const AppRoutes = () => {
                 <Route path="/register" element={<Register />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/about" element={<About />} />
+                <Route path="/auth-redirect" element={<AuthRedirect />} /> 
                 
                 {/* Route protégée par le token */}
                 <Route 
