@@ -100,7 +100,7 @@ const Navigation = () => {
     const [endInput, setEndInput] = useState('');
     const [suggestions, setSuggestions] = useState({ start: [], end: [] });
     const [summary, setSummary] = useState(null);
-    const [mapKey, setMapKey] = useState(Date.now()); 
+    const mapKey = Date.now();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 

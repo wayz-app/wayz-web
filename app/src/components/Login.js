@@ -29,8 +29,7 @@ const Login = () => {
         const token = urlParams.get('token');
         
         if (token) {
-            localStorage.setItem('token', token);            
-            const storedToken = localStorage.getItem('token');
+            localStorage.setItem('token', token);
             window.history.replaceState({}, document.title, location.pathname);
             
             setTimeout(() => {
