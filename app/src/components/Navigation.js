@@ -8,11 +8,20 @@ import markerShadowPng from 'leaflet/dist/images/marker-shadow.png';
 import '../css/Navigation.css';
 import Footer from './Footer';
 import Header from './Header';
-import { QRCodeSVG } from 'qrcode.react'; // Import QR code library
+import { QRCodeSVG } from 'qrcode.react';
 
-// Fonction pour formater la durée en jours, heures et minutes
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+    iconUrl: markerIconPng,
+    iconRetinaUrl: markerIconPng,
+    shadowUrl: markerShadowPng,
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+});
+
 const formatDuration = (seconds) => {
-    // Calculer les jours, heures et minutes
     const days = Math.floor(seconds / (24 * 3600));
     seconds %= (24 * 3600);
     
@@ -21,7 +30,6 @@ const formatDuration = (seconds) => {
     
     const minutes = Math.floor(seconds / 60);
     
-    // Construire la chaîne de texte en fonction des valeurs
     let durationString = "";
     
     if (days > 0) {
@@ -39,30 +47,32 @@ const formatDuration = (seconds) => {
     return durationString.trim();
 };
 
-const defaultIcon = L.icon({
-    iconUrl: markerIconPng,
-    shadowUrl: markerShadowPng,
-    iconAnchor: [12, 41], // pour centrer correctement
+const startIcon = L.divIcon({
+    className: 'custom-div-icon',
+    html: `
+        <div class="marker-pin marker-pin-start">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="white">
+                <path d="M12,2C8.13,2 5,5.13 5,9c0,5.25 7,13 7,13s7,-7.75 7,-13c0,-3.87 -3.13,-7 -7,-7zM12,11.5c-1.38,0 -2.5,-1.12 -2.5,-2.5s1.12,-2.5 2.5,-2.5 2.5,1.12 2.5,2.5 -1.12,2.5 -2.5,2.5z"/>
+            </svg>
+        </div>
+    `,
+    iconSize: [40, 50],
+    iconAnchor: [20, 50],
+    popupAnchor: [0, -50]
 });
 
-L.Marker.prototype.options.icon = defaultIcon;
-
-const startIcon = new L.Icon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png',
-    shadowUrl: markerShadowPng,
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-});
-
-const endIcon = new L.Icon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
-    shadowUrl: markerShadowPng,
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
+const endIcon = L.divIcon({
+    className: 'custom-div-icon',
+    html: `
+        <div class="marker-pin marker-pin-end">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="white">
+                <path d="M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z"/>
+            </svg>
+        </div>
+    `,
+    iconSize: [40, 50],
+    iconAnchor: [20, 50],
+    popupAnchor: [0, -50]
 });
 
 const FitBounds = ({ start, end, route }) => {
@@ -71,8 +81,12 @@ const FitBounds = ({ start, end, route }) => {
     useEffect(() => {
         if (!start || !end || route.length === 0) return;
 
-        const bounds = L.latLngBounds(route);
-        map.fitBounds(bounds, { padding: [50, 50] });
+        try {
+            const bounds = L.latLngBounds(route);
+            map.fitBounds(bounds, { padding: [50, 50] });
+        } catch (err) {
+            console.error("Error fitting bounds:", err);
+        }
     }, [start, end, route, map]);
 
     return null;
@@ -86,13 +100,32 @@ const Navigation = () => {
     const [endInput, setEndInput] = useState('');
     const [suggestions, setSuggestions] = useState({ start: [], end: [] });
     const [summary, setSummary] = useState(null);
+    const [mapKey, setMapKey] = useState(Date.now()); 
 
     const apiKey = process.env.REACT_APP_ORS_API_KEY;
 
-    // Fonction pour récupérer l'itinéraire
+    const MapClickHandler = () => {
+        useMapEvents({
+            click: (e) => {
+                const { lat, lng } = e.latlng;
+                if (!start) {
+                    setStart([lat, lng]);
+                    setStartInput(`${lat.toFixed(4)}, ${lng.toFixed(4)}`);
+                } else if (!end) {
+                    setEnd([lat, lng]);
+                    setEndInput(`${lat.toFixed(4)}, ${lng.toFixed(4)}`);
+                }
+            },
+        });
+        return null;
+    };
+
     const getRoute = async () => {
-        const apiKey = process.env.REACT_APP_ORS_API_KEY;
-    
+        if (!start || !end) {
+            alert("Please select both start and destination points");
+            return;
+        }
+
         const startCoords = `${start[1]},${start[0]}`;
         const endCoords = `${end[1]},${end[0]}`;
     
@@ -111,7 +144,10 @@ const Navigation = () => {
     };
 
     const fetchSuggestions = async (query, type) => {
-        if (!query) return;
+        if (!query) {
+            setSuggestions(prev => ({ ...prev, [type]: [] }));
+            return;
+        }
 
         const url = `https://api.openrouteservice.org/geocode/search?api_key=${apiKey}&text=${query}&size=5`;
 
@@ -132,8 +168,6 @@ const Navigation = () => {
     };
 
     const selectLocation = (name, coords, type) => {
-        setRoute([]); 
-    
         if (type === 'start') {
             setStart(coords);
             setStartInput(name);
@@ -152,7 +186,6 @@ const Navigation = () => {
                 <h1>🚗 Navigation</h1>
                 <p>Plan your route from the starting point to your destination.</p>
 
-                {/* Champs de recherche */}
                 <div className="navigation-search-container">
                     <div className="navigation-search-box">
                         <input
@@ -167,7 +200,11 @@ const Navigation = () => {
                         {suggestions.start.length > 0 && (
                             <div className="navigation-suggestions">
                                 {suggestions.start.map((item, index) => (
-                                    <div key={index} className="navigation-suggestion" onClick={() => selectLocation(item.name, item.coords, 'start')}>
+                                    <div 
+                                        key={index} 
+                                        className="navigation-suggestion" 
+                                        onClick={() => selectLocation(item.name, item.coords, 'start')}
+                                    >
                                         {item.name}
                                     </div>
                                 ))}
@@ -188,7 +225,11 @@ const Navigation = () => {
                         {suggestions.end.length > 0 && (
                             <div className="navigation-suggestions">
                                 {suggestions.end.map((item, index) => (
-                                    <div key={index} className="navigation-suggestion" onClick={() => selectLocation(item.name, item.coords, 'end')}>
+                                    <div 
+                                        key={index} 
+                                        className="navigation-suggestion" 
+                                        onClick={() => selectLocation(item.name, item.coords, 'end')}
+                                    >
                                         {item.name}
                                     </div>
                                 ))}
@@ -204,53 +245,75 @@ const Navigation = () => {
                 {summary && (
                     <div className="navigation-route-summary-container">
                         <div className="navigation-route-summary">
-                            <h3>📝 Route Summary</h3>
-                            <div className="navigation-route-summary-paragraphs">
-                                <p><strong>Distance:</strong> {(summary.distance / 1000).toFixed(1)} km</p>
-                                <p><strong>Duration:</strong> {formatDuration(summary.duration)}</p>
+                            <div className="summary-header">
+                                <h3>Route Summary</h3>
+                            </div>
+                            <div className="summary-body">
+                                <div className="summary-item">
+                                    <div className="summary-item-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="#333">
+                                            <path d="M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z" />
+                                        </svg>
+                                    </div>
+                                    <div className="summary-item-content">
+                                        <span className="summary-label">Distance</span>
+                                        <span className="summary-value">{(summary.distance / 1000).toFixed(1)} km</span>
+                                    </div>
+                                </div>
+                                <div className="summary-item">
+                                    <div className="summary-item-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="#333">
+                                            <path d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z" />
+                                        </svg>
+                                    </div>
+                                    <div className="summary-item-content">
+                                        <span className="summary-label">Duration</span>
+                                        <span className="summary-value">{formatDuration(summary.duration)}</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div className="navigation-qr-code">
-                            <QRCodeSVG 
-                                value="https://www.google.com" 
-                                size={128} 
-                                bgColor="#ffffff" 
-                                fgColor="#000000" 
-                                level="L" 
-                                includeMargin={false}
-                            />
+                            <div className="qr-header">
+                                <h3>Share Route</h3>
+                            </div>
+                            <div className="qr-container">
+                                <QRCodeSVG 
+                                    value={`https://www.google.com/maps/dir/?api=1&origin=${start?.[0]},${start?.[1]}&destination=${end?.[0]},${end?.[1]}`}
+                                    size={140} 
+                                    bgColor="#ffffff" 
+                                    fgColor="#000000" 
+                                    level="L" 
+                                    includeMargin={false}
+                                />
+                            </div>
                         </div>
                     </div>
                 )}
 
-                <MapContainer center={[46.6031, 1.8883]} zoom={6} className="navigation-map-container">
-                    <TileLayer
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        attribution="&copy; OpenStreetMap contributors"
-                    />
-                    {start && <Marker position={start} icon={startIcon} />}
-                    {end && <Marker position={end} icon={endIcon} />}
-                    {route.length > 0 && <Polyline positions={route} color="blue" />}
-                    <MapClickHandler setStart={setStart} setEnd={setEnd} />
-                    <FitBounds start={start} end={end} route={route} />
-                </MapContainer>
+                <div className="navigation-map-wrapper" style={{ height: '500px', width: '100%' }}>
+                    <MapContainer 
+                        key={mapKey}
+                        center={[46.6031, 1.8883]} 
+                        zoom={6} 
+                        style={{ height: '100%', width: '100%' }}
+                        className="navigation-map-container"
+                    >
+                        <TileLayer
+                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                            attribution="&copy; OpenStreetMap contributors"
+                        />
+                        {start && <Marker position={start} icon={startIcon} />}
+                        {end && <Marker position={end} icon={endIcon} />}
+                        {route.length > 0 && <Polyline positions={route} color="blue" />}
+                        <MapClickHandler />
+                        <FitBounds start={start} end={end} route={route} />
+                    </MapContainer>
+                </div>
             </div>
             <Footer />
         </>
     );
-};
-
-// Composant pour gérer les clics sur la carte
-const MapClickHandler = ({ setStart, setEnd }) => {
-    useMapEvents({
-        click: (e) => {
-            const { lat, lng } = e.latlng;
-            setStart(prev => prev.length === 0 ? [lat, lng] : prev);
-            setEnd(prev => prev.length === 0 ? [lat, lng] : prev);
-        },
-    });
-
-    return null;
 };
 
 export default Navigation;
