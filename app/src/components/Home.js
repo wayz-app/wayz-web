@@ -1,11 +1,25 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import '../css/Home.css';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 
 const Home = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        const urlParams = new URLSearchParams(location.search);
+        const token = urlParams.get('token');
+        
+        if (token) {
+            localStorage.setItem('token', token);
+            window.history.replaceState({}, document.title, location.pathname);
+            navigate('/dashboard');
+        } else {
+            console.log('No token found in URL');
+        }
+    }, [navigate, location]);
     
     return (
         <>

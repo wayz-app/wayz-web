@@ -13,16 +13,16 @@ const Register = () => {
         password: '',
     });
 
-    const [errorMessage, setErrorMessage] = useState(''); // État pour gérer le message d'erreur
-    const [successMessage, setSuccessMessage] = useState(''); // État pour gérer le succès
+    const [errorMessage, setErrorMessage] = useState(''); 
+    const [successMessage, setSuccessMessage] = useState('');
 
     const navigate = useNavigate(); 
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
-        setErrorMessage(''); // Effacer les erreurs lorsqu'on modifie un champ
-        setSuccessMessage(''); // Effacer les messages de succès
+        setErrorMessage(''); 
+        setSuccessMessage('');
     };
 
     const handleSubmit = async (e) => {
@@ -56,18 +56,16 @@ const Register = () => {
             <div className="register-content">
                 <h1>Register</h1>
 
-                {/* Affichage des messages d'erreur */}
                 {errorMessage && (
-                    <div className="error-message">⚠️ {errorMessage}</div>
+                    <div className="register-error-message">⚠️ {errorMessage}</div>
                 )}
 
-                {/* Affichage des messages de succès */}
                 {successMessage && (
-                    <div className="success-message">✅ {successMessage}</div>
+                    <div className="register-success-message">✅ {successMessage}</div>
                 )}
 
                 <form className="register-form" onSubmit={handleSubmit}>
-                    <div className="form-group">
+                    <div className="register-form-group">
                         <label htmlFor="firstname">Firstname</label>
                         <input
                             type="text"
@@ -79,7 +77,7 @@ const Register = () => {
                         />
                     </div>
                     
-                    <div className="form-group">
+                    <div className="register-form-group">
                         <label htmlFor="lastname">Lastname</label>
                         <input
                             type="text"
@@ -91,7 +89,7 @@ const Register = () => {
                         />
                     </div>
                     
-                    <div className="form-group">
+                    <div className="register-form-group">
                         <label htmlFor="username">Username</label>
                         <input
                             type="text"
@@ -103,7 +101,7 @@ const Register = () => {
                         />
                     </div>
 
-                    <div className="form-group">
+                    <div className="register-form-group">
                         <label htmlFor="email">Email</label>
                         <input
                             type="email"
@@ -115,7 +113,7 @@ const Register = () => {
                         />
                     </div>
 
-                    <div className="form-group">
+                    <div className="register-form-group">
                         <label htmlFor="password">Password</label>
                         <input
                             type="password"
@@ -128,6 +126,10 @@ const Register = () => {
                     </div>
 
                     <button type="submit" className="register-button">Register</button>
+
+                    <div className="register-login-link">
+                        <p>Already have an account? <span onClick={() => navigate('/login')}>Login</span></p>
+                    </div>
                 </form>
             </div>
             <Footer />
