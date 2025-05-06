@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import '../css/Dashboard.css';
@@ -12,29 +12,13 @@ const Dashboard = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const [loading, setLoading] = useState(true); 
 
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            try {
-                const decoded = jwtDecode(token);
-                const id = decoded.sub;
-                setUserId(id);
-            } catch (error) {
-                console.error('Failed to decode token:', error);
-                handleInvalidToken();
-            }
-        } else {
-            navigate('/login');
-        }
+    const handleInvalidToken = useCallback(() => {
+        localStorage.removeItem('token');
+        setErrorMessage('Session expired. Please log in again.');
+        setTimeout(() => navigate('/login'), 2000);
     }, [navigate]);
 
-    useEffect(() => {
-        if (userId) {
-            fetchUserData(userId);
-        }
-    }, [userId]); 
-
-    const fetchUserData = async (id) => {
+    const fetchUserData = useCallback(async (id) => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -68,13 +52,29 @@ const Dashboard = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [handleInvalidToken]);
 
-    const handleInvalidToken = () => {
-        localStorage.removeItem('token');
-        setErrorMessage('Session expired. Please log in again.');
-        setTimeout(() => navigate('/login'), 2000);
-    };
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            try {
+                const decoded = jwtDecode(token);
+                const id = decoded.sub;
+                setUserId(id);
+            } catch (error) {
+                console.error('Failed to decode token:', error);
+                handleInvalidToken();
+            }
+        } else {
+            navigate('/login');
+        }
+    }, [navigate, handleInvalidToken]);
+
+    useEffect(() => {
+        if (userId) {
+            fetchUserData(userId);
+        }
+    }, [userId, fetchUserData]); 
 
     const handleLogout = () => {
         localStorage.removeItem('token');

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import '../css/Statistics.css';
@@ -11,6 +11,12 @@ const Statistics = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [userId, setUserId] = useState('');
+
+    const handleInvalidToken = useCallback(() => {
+        localStorage.removeItem('token');
+        setError('Session expired. Please log in again.');
+        setTimeout(() => navigate('/login'), 2000);
+    }, [navigate]);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -26,7 +32,7 @@ const Statistics = () => {
             console.error('Failed to decode token:', error);
             handleInvalidToken();
         }
-    }, [navigate]);
+    }, [navigate, handleInvalidToken]);
 
     useEffect(() => {
         if (!userId) return;
@@ -68,13 +74,7 @@ const Statistics = () => {
         };
 
         fetchStatistics();
-    }, [userId, navigate]);
-
-    const handleInvalidToken = () => {
-        localStorage.removeItem('token');
-        setError('Session expired. Please log in again.');
-        setTimeout(() => navigate('/login'), 2000);
-    };
+    }, [userId, navigate, handleInvalidToken]);
 
     const getRandomColor = () => {
         const colors = [
