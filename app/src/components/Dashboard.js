@@ -32,7 +32,7 @@ const Dashboard = () => {
         if (userId) {
             fetchUserData(userId);
         }
-    }, [userId]); // Exécute fetchUserData une fois que userId est défini
+    }, [userId]); 
 
     const fetchUserData = async (id) => {
         try {
@@ -66,7 +66,7 @@ const Dashboard = () => {
             console.error('Error fetching user:', error);
             setErrorMessage('An error occurred while fetching user information.');
         } finally {
-            setLoading(false); // Fin du chargement après la requête
+            setLoading(false);
         }
     };
 
@@ -76,7 +76,6 @@ const Dashboard = () => {
         setTimeout(() => navigate('/login'), 2000);
     };
 
-    // Déconnexion
     const handleLogout = () => {
         localStorage.removeItem('token');
         navigate('/login');
@@ -91,7 +90,9 @@ const Dashboard = () => {
                 {errorMessage && <div className="dashboard-error-message">⚠️ {errorMessage}</div>}
 
                 {loading ? (
-                    <p>Loading user information...</p>
+                    <div className="dashboard-loading">
+                        <p>Loading user information...</p>
+                    </div>
                 ) : (
                     <h2>Hello, {username || 'User'} 👋</h2>
                 )}
@@ -109,12 +110,6 @@ const Dashboard = () => {
                         <h2>👤 Profile</h2>
                         <p>Update your account information and preferences.</p>
                         <button onClick={() => navigate('/profile')}>Manage Profile</button>
-                    </div>
-
-                    <div className="dashboard-card">
-                        <h2>⚙️ Settings</h2>
-                        <p>Customize your app experience and preferences.</p>
-                        <button onClick={() => alert('Feature coming soon!')}>Configure</button>
                     </div>
                 </div>
 
