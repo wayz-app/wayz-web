@@ -1,7 +1,7 @@
 /* General Layout */
 .about-container {
     text-align: center;
-    padding: 60px 20px;
+    padding: 40px 20px 0 20px;
     margin: 0 100px;
     color: #333;
 }
@@ -21,9 +21,10 @@
 /* Grid Layout */
 .about-grid {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 130px;
+    margin-bottom: 60px;
 }
 
 .about-item {
@@ -58,114 +59,409 @@
     color: #6e6e6e;
 }
 
-/* How It Works Timeline */
-.how-it-works {
-    padding: 60px 20px;
-    margin-top: 60px;
-    background: #f5f5f5;
+/* Statistics Section */
+.statistics-section {
+    background: #f8f9fa;
     border-radius: 15px;
-    text-align: center;
+    padding: 40px 20px;
+    margin: 60px 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
 .section-title {
     font-size: 28px;
     font-weight: bold;
     margin-bottom: 30px;
+    text-align: center;
 }
 
-.timeline {
-    position: relative;
-    max-width: 800px;
-    margin: 0 auto;
-    padding-left: 40px;
+/* Statistics Container */
+.statistics-container {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    margin-top: 30px;
+    padding: 0;
+}
+
+/* Statistics Rows */
+.statistics-row {
+    display: flex;
+    gap: 25px;
+    width: 100%;
+}
+
+/* First row - side by side metrics */
+.statistics-row:first-child {
+    justify-content: space-between;
+    height: auto;
+}
+
+.statistics-row:first-child .stat-card {
+    flex: 1;
+    max-width: calc(50% - 12.5px);
+    height: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Second row - charts */
+.statistics-row:nth-child(2) {
+    height: auto;
+}
+
+.statistics-row:nth-child(2) .stat-card {
+    flex: 1;
+    max-width: calc(50% - 12.5px);
+    height: 350px;
+    padding-top: 20px;
     text-align: left;
 }
 
-.timeline-step {
+/* Third row - map (full width) */
+.statistics-row.map-row {
+    height: 450px; 
+    margin-bottom: 0;
+}
+
+.statistics-row.map-row .stat-card {
+    flex: 1;
+    width: 100%;
+    padding-bottom: 25px;
+}
+
+/* Card Styling */
+.stat-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.stat-card.hotspots {
+    padding-bottom: 0; 
+    height: 100%; 
+    display: flex;
+    flex-direction: column;
+}
+
+/* Card Heading and Values */
+.statistics-row:first-child .stat-card h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.statistics-row:first-child .stat-value {
+    font-size: 46px;
+    font-weight: 600;
+    margin: 5px 0 10px;
+}
+
+.statistics-row:first-child p {
+    font-size: 14px;
+    color: #666;
+}
+
+.statistics-row:nth-child(2) .stat-card h3 {
+    font-size: 18px;
+    margin-bottom: 20px;
+    text-align: left;
+    font-weight: 600;
+}
+
+.stat-value {
+    font-size: 42px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.total-reports .stat-value {
+    color: #0088FE;
+}
+
+.total-locations .stat-value {
+    color: #00C49F;
+}
+
+/* Report Types Styling */
+.report-types-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 10px;
+    padding: 0;
+    text-align: left;
+    flex-grow: 1;
+    overflow-y: auto;
+    max-height: 280px;
+}
+
+.report-type-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 15px;
+}
+
+.report-type-header {
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
+    gap: 8px;
+}
+
+.report-type-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.report-type-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+.report-type-bar-container {
     position: relative;
+    height: 24px;
+    background-color: #f3f3f3;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 5px;
 }
 
-.timeline-step::before {
-    content: "";
-    position: absolute;
-    left: 20px;
-    top: 0;
-    width: 2px;
+.report-type-bar {
     height: 100%;
-    background-color: #333;
+    border-radius: 12px;
+    transition: width 1s ease-out;
 }
 
-.timeline-circle {
-    width: 40px;
-    height: 40px;
-    background-color: #333;
-    color: white;
-    font-size: 18px;
-    font-weight: bold;
+.report-type-value {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    font-weight: 500;
+    color: #333;
+}
+
+/* Top Reporters Styling */
+.reporters-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 10px;
+    padding: 0;
+    text-align: left;
+    flex-grow: 1;
+    overflow-y: auto;
+    max-height: 280px;
+}
+
+.reporter-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.reporter-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.reporter-avatar {
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 20px;
-    z-index: 1;
-}
-
-.timeline-step p {
-    font-size: 18px;
-    color: #333;
-}
-
-/* Features Banner */
-.features-banner {
-    background: #dfdfdf;
-    padding: 60px 20px;
-    text-align: center;
-    margin-top: 60px;
-    border-radius: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.features-grid {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    gap: 20px;
-    flex-wrap: wrap;
-    max-width: 100vw;
-    margin: 0 auto;
-}
-
-.features-item {
-    background-color: white;
-    padding: 30px;
-    border-radius: 15px;
-    width: 300px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.features-item:hover {
-    transform: translateY(-10px);
-}
-
-.features-item h3 {
-    font-size: 22px;
-    color: #333;
-    margin-bottom: 15px;
-}
-
-.features-item p {
-    font-size: 18px;
-    color: #666;
-    font-weight: 500;
-}
-
-.features-value {
-    font-size: 24px;
+    color: white;
     font-weight: bold;
-    color: #6e6e6e;
+    font-size: 14px;
+}
+
+.reporter-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: calc(100% - 50px);
+}
+
+.reporter-bar-container {
+    position: relative;
+    height: 24px;
+    background-color: #f3f3f3;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 5px;
+}
+
+.reporter-bar {
+    height: 100%;
+    border-radius: 12px;
+    transition: width 1s ease-out;
+}
+
+.reporter-value {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    font-weight: 500;
+    color: #333;
+}
+
+/* Hotspots Map Styling */
+.hotspots-map-container {
+    width: 100%;
+    height: 90%;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 5px;
+    flex-grow: 1;
+    margin-bottom: 0; 
+}
+
+.no-data-message {
+    color: #666;
+    font-style: italic;
+    padding: 20px 0;
+    text-align: center;
+}
+
+.statistics-loading,
+.statistics-error {
+    padding: 40px;
+    text-align: center;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.statistics-error {
+    color: #e74c3c;
+}
+
+/* Leaflet custom styles */
+.leaflet-container {
+    font-family: inherit;
+    height: 100% !important; 
+    width: 100% !important;
+    margin-bottom: 0 !important;
+}
+
+.leaflet-tooltip {
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    text-align: center;
+}
+
+.leaflet-tooltip-top:before {
+    border-top-color: rgba(255, 255, 255, 0.9);
+}
+
+.leaflet-control-zoom a {
+    color: #333;
+}
+
+/* Make sure leaflet controls stay below our UI elements */
+.leaflet-control {
+    z-index: 800 !important;
+}
+
+.leaflet-top, 
+.leaflet-bottom {
+    z-index: 900 !important;
+}
+
+/* Make sure our suggestions dropdown is on top of map */
+.navigation-suggestions {
+    z-index: 1500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .about-container {
+        margin: 0 50px;
+    }
+    
+    .about-grid {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 992px) {
+    .statistics-row {
+        flex-direction: column;
+        height: auto !important;
+    }
+    
+    .statistics-row:first-child .stat-card,
+    .statistics-row:nth-child(2) .stat-card {
+        max-width: 100%;
+        margin-bottom: 25px;
+    }
+    
+    .stat-card {
+        min-height: 200px;
+    }
+    
+    .hotspots-map-container {
+        height: 350px;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-container {
+        margin: 0 20px;
+        padding: 40px 10px;
+    }
+    
+    .about-title {
+        font-size: 28px;
+    }
+    
+    .section-title {
+        font-size: 24px;
+    }
+    
+    .timeline {
+        padding-left: 30px;
+    }
+    
+    .timeline-circle {
+        width: 35px;
+        height: 35px;
+        font-size: 16px;
+    }
+    
+    .timeline-step p {
+        font-size: 16px;
+    }
 }
