@@ -86,9 +86,9 @@ const Dashboard = () => {
         <>
             <Header />
             <div className="dashboard-content">
-                <h1>🚀 Welcome to Your Dashboard</h1>
+                <h1>Welcome to Your Dashboard</h1>
 
-                {errorMessage && <div className="error-message">⚠️ {errorMessage}</div>}
+                {errorMessage && <div className="dashboard-error-message">⚠️ {errorMessage}</div>}
 
                 {loading ? (
                     <p>Loading user information...</p>
@@ -119,7 +119,7 @@ const Dashboard = () => {
                 </div>
 
                 <div className="dashboard-actions">
-                    <button className="logout-button" onClick={handleLogout}>Logout</button>
+                    <button className="dashboard-logout-button" onClick={handleLogout}>Logout</button>
                 </div>
             </div>
             <Footer />

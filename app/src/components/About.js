@@ -17,7 +17,7 @@ const About = () => {
     const [error, setError] = useState(null);
     const [mapCenter, setMapCenter] = useState([48.8566, 2.3522]); 
 
-    const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#0088FE', '#00C49F'];
+    const COLORS = ['#4285F4', '#34A853', '#FBBC05', '#EA4335', '#8884d8', '#82ca9d', '#0088FE', '#00C49F'];
     const USER_COLORS = ['#4299E1', '#48BB78', '#ED8936', '#9F7AEA', '#ED64A6'];
 
     const formatReportName = (name) => {
@@ -113,98 +113,103 @@ const About = () => {
                 </div>
 
                 {/* Statistics Section */}
-                <div className="statistics-section">
-                    <h2 className="section-title">Community Impact</h2>
+                <div className="about-statistics-section">
+                    <h2 className="about-section-title">Community Impact</h2>
                     
                     {loading ? (
-                        <div className="statistics-loading">
+                        <div className="about-statistics-loading">
+                            <div className="about-loading-spinner"></div>
                             <p>Loading statistics...</p>
                         </div>
                     ) : error ? (
-                        <div className="statistics-error">
+                        <div className="about-statistics-error">
                             <p>{error}</p>
                         </div>
                     ) : (
-                        <div className="statistics-container">
+                        <div className="about-statistics-container">
                             {/* Row 1: Key Metrics */}
-                            <div className="statistics-row">
-                                <div className="stat-card total-reports">
+                            <div className="about-statistics-row">
+                                <div className="about-stat-card about-total-reports">
                                     <h3>Total Reports</h3>
-                                    <div className="stat-value">{statistics.eventTypes.total_events}</div>
+                                    <div className="about-stat-value">{statistics.eventTypes.total_events}</div>
                                     <p>community alerts shared</p>
                                 </div>
-                                <div className="stat-card total-locations">
+                                <div className="about-stat-card about-total-locations">
                                     <h3>Locations Covered</h3>
-                                    <div className="stat-value">{statistics.locationDensity.total_locations}</div>
+                                    <div className="about-stat-value">{statistics.locationDensity.total_locations}</div>
                                     <p>unique areas monitored</p>
                                 </div>
                             </div>
                             
                             {/* Row 2: Charts and Map */}
-                            <div className="statistics-row">
+                            <div className="about-statistics-row">
                                 {/* Report Types */}
-                                <div className="stat-card event-types">
+                                <div className="about-stat-card about-event-types">
                                     <h3>Report Types</h3>
-                                    <div className="report-types-list">
-                                        {statistics.eventTypes.frequencies.map((item, index) => (
-                                            <div key={index} className="report-type-item">
-                                                <div className="report-type-header">
-                                                    <div className="report-type-dot" style={{backgroundColor: COLORS[index % COLORS.length]}}></div>
-                                                    <div className="report-type-name">{formatReportName(item.event_type)}</div>
-                                                </div>
-                                                <div className="report-type-bar-container">
-                                                    <div 
-                                                        className="report-type-bar" 
-                                                        style={{
-                                                            width: `${item.percentage}%`, 
-                                                            backgroundColor: COLORS[index % COLORS.length]
-                                                        }}
-                                                    ></div>
-                                                    <div className="report-type-value">{item.count} ({item.percentage.toFixed(1)}%)</div>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                {/* Top Reporters */}
-                                <div className="stat-card top-reporters">
-                                    <h3>Top Contributors</h3>
-                                    {statistics.topReporters && statistics.topReporters.reporters && statistics.topReporters.reporters.length > 0 ? (
-                                        <div className="reporters-list">
-                                            {statistics.topReporters.reporters.slice(0, 5).map((reporter, index) => (
-                                                <div key={index} className="reporter-item">
-                                                    <div className="reporter-header">
-                                                        <div className="reporter-avatar" style={{ backgroundColor: USER_COLORS[index % USER_COLORS.length] }}>
-                                                            {getAvatarLetter(reporter.username)}
-                                                        </div>
-                                                        <div className="reporter-name">{reporter.username || 'Anonymous User'}</div>
+                                    {statistics.eventTypes.frequencies && statistics.eventTypes.frequencies.length > 0 ? (
+                                        <div className="about-report-types-list">
+                                            {statistics.eventTypes.frequencies.map((item, index) => (
+                                                <div key={index} className="about-report-type-item">
+                                                    <div className="about-report-type-header">
+                                                        <div className="about-report-type-dot" style={{backgroundColor: COLORS[index % COLORS.length]}}></div>
+                                                        <div className="about-report-type-name">{formatReportName(item.event_type)}</div>
                                                     </div>
-                                                    <div className="reporter-bar-container">
+                                                    <div className="about-report-type-bar-container">
                                                         <div 
-                                                            className="reporter-bar" 
+                                                            className="about-report-type-bar" 
                                                             style={{
-                                                                width: `${maxReports > 0 ? ((reporter.event_count || 0) / maxReports) * 100 : 0}%`, 
-                                                                backgroundColor: USER_COLORS[index % USER_COLORS.length]
+                                                                width: `${item.percentage}%`, 
+                                                                backgroundColor: COLORS[index % COLORS.length]
                                                             }}
                                                         ></div>
-                                                        <div className="reporter-value">{reporter.event_count || 0} reports</div>
+                                                        <div className="about-report-type-value">{item.count} ({item.percentage.toFixed(1)}%)</div>
                                                     </div>
                                                 </div>
                                             ))}
                                         </div>
                                     ) : (
-                                        <p className="no-data-message">No contributor data available</p>
+                                        <div className="about-no-data-message">No report type data available</div>
+                                    )}
+                                </div>
+
+                                {/* Top Reporters */}
+                                <div className="about-stat-card top-reporters">
+                                    <h3>Top Contributors</h3>
+                                    {statistics.topReporters && statistics.topReporters.reporters && statistics.topReporters.reporters.length > 0 ? (
+                                        <div className="about-reporters-list">
+                                            {statistics.topReporters.reporters.slice(0, 5).map((reporter, index) => (
+                                                <div key={index} className="about-reporter-item">
+                                                    <div className="about-reporter-header">
+                                                        <div className="about-reporter-avatar" style={{ backgroundColor: USER_COLORS[index % USER_COLORS.length] }}>
+                                                            {getAvatarLetter(reporter.username)}
+                                                        </div>
+                                                        <div className="about-reporter-name">{reporter.username || 'Anonymous User'}</div>
+                                                    </div>
+                                                    <div className="about-reporter-bar-container">
+                                                        <div 
+                                                            className="about-reporter-bar" 
+                                                            style={{
+                                                                width: `${maxReports > 0 ? ((reporter.event_count || 0) / maxReports) * 100 : 0}%`, 
+                                                                backgroundColor: USER_COLORS[index % USER_COLORS.length]
+                                                            }}
+                                                        ></div>
+                                                        <div className="about-reporter-value">{reporter.event_count || 0} reports</div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <div className="about-no-data-message">No contributor data available</div>
                                     )}
                                 </div>
                             </div>
 
                             {/* Row 3: Alert Hotspots Map */}
-                            <div className="statistics-row map-row">
-                                <div className="stat-card hotspots">
+                            <div className="about-statistics-row map-row">
+                                <div className="about-stat-card hotspots">
                                     <h3>Alert Hotspots</h3>
                                     {statistics.hotspots.hotspots && statistics.hotspots.hotspots.length > 0 ? (
-                                        <div className="hotspots-map-container">
+                                        <div className="about-hotspots-map-container">
                                             <MapContainer 
                                                 center={mapCenter} 
                                                 zoom={10} 
@@ -249,7 +254,7 @@ const About = () => {
                                             </MapContainer>
                                         </div>
                                     ) : (
-                                        <p className="no-data-message">No hotspots detected yet</p>
+                                        <div className="about-no-data-message">No hotspots detected yet</div>
                                     )}
                                 </div>
                             </div>
