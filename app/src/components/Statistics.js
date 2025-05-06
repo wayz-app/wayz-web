@@ -12,7 +12,6 @@ const Statistics = () => {
     const [error, setError] = useState('');
     const [userId, setUserId] = useState('');
 
-    // Fetch user ID from token
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -29,7 +28,6 @@ const Statistics = () => {
         }
     }, [navigate]);
 
-    // Fetch statistics data
     useEffect(() => {
         if (!userId) return;
         
@@ -78,44 +76,58 @@ const Statistics = () => {
         setTimeout(() => navigate('/login'), 2000);
     };
 
-    // Generate random colors for the chart (in a real app, you might want consistent colors)
     const getRandomColor = () => {
         const colors = [
-            '#4285F4', '#34A853', '#FBBC05', '#EA4335', // Google colors
-            '#3498db', '#2ecc71', '#f1c40f', '#e74c3c', // Flat UI colors
-            '#9b59b6', '#1abc9c', '#e67e22', '#95a5a6'  // More Flat UI colors
+            '#4285F4', '#34A853', '#FBBC05', '#EA4335', 
+            '#3498db', '#2ecc71', '#f1c40f', '#e74c3c', 
+            '#9b59b6', '#1abc9c', '#e67e22', '#95a5a6' 
         ];
         return colors[Math.floor(Math.random() * colors.length)];
     };
 
     const renderEventTypeChart = () => {
         if (!statistics || !statistics.event_types || statistics.event_types.length === 0) {
-            return <div className="no-data">No event type data available</div>;
+            return <div className="statistics-no-data">No event type data available</div>;
         }
-
+    
+        const eventTypeColors = {
+            'slow_traffic': '#4285F4',
+            'visible_police': '#EA4335',
+            'pile_up_crash': '#FBBC05',
+            'hidden_police': '#34A853',
+            'roadkill_hazard': '#9b59b6',
+            'icy_road_weather': '#1abc9c',
+            'standstill_traffic': '#e67e22'
+        };
+    
         return (
-            <div className="event-type-chart">
+            <div className="statistics-event-type-chart">
                 <h3>Event Types Distribution</h3>
-                <div className="chart-container">
-                    {statistics.event_types.map((type, index) => (
-                        <div key={index} className="chart-item">
-                            <div className="chart-label">
-                                <span className="color-indicator" style={{ backgroundColor: getRandomColor() }}></span>
-                                <span>{type.event_type}</span>
+                <div className="statistics-chart-container">
+                    {statistics.event_types.map((type, index) => {
+                        const eventType = type.event_type;
+                        const color = eventTypeColors[eventType] || getRandomColor();
+                        
+                        return (
+                            <div key={index} className="statistics-chart-item">
+                                <div className="statistics-chart-label">
+                                    <span className="statistics-color-indicator" style={{ backgroundColor: color }}></span>
+                                    <span>{eventType.replace(/_/g, ' ')}</span>
+                                </div>
+                                <div className="statistics-chart-bar-container">
+                                    <div 
+                                        className="statistics-chart-bar" 
+                                        style={{ 
+                                            width: `${type.percentage}%`,
+                                            backgroundColor: color
+                                        }}
+                                    ></div>
+                                    <span className="statistics-chart-percentage">{type.percentage.toFixed(2)}%</span>
+                                </div>
+                                <div className="statistics-chart-count">{type.count} event{type.count !== 1 ? 's' : ''}</div>
                             </div>
-                            <div className="chart-bar-container">
-                                <div 
-                                    className="chart-bar" 
-                                    style={{ 
-                                        width: `${type.percentage}%`,
-                                        backgroundColor: getRandomColor()
-                                    }}
-                                ></div>
-                                <span className="chart-percentage">{type.percentage}%</span>
-                            </div>
-                            <div className="chart-count">{type.count} events</div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             </div>
         );
@@ -157,14 +169,6 @@ const Statistics = () => {
                                 <div className="statistics-stat-content">
                                     <h3>Events This Month</h3>
                                     <div className="statistics-stat-value">{statistics.events_this_month}</div>
-                                </div>
-                            </div>
-                            
-                            <div className="statistics-stat-card statistics-user-info">
-                                <div className="statistics-stat-icon">👤</div>
-                                <div className="statistics-stat-content">
-                                    <h3>User</h3>
-                                    <div className="statistics-stat-value">{statistics.username}</div>
                                 </div>
                             </div>
                         </div>

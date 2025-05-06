@@ -300,11 +300,6 @@
     color: #388e3c;
 }
 
-.statistics-user-info .statistics-stat-icon {
-    background-color: #fff3e0;
-    color: #f57c00;
-}
-
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .statistics-content {
