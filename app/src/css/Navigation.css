@@ -159,6 +159,67 @@
 }
 
 /* Route Summary */
+.navigation-route-types-summary-container {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.navigation-route-types {
+    text-align: center;
+}
+
+.navigation-route-types h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: #1b1b83;
+    font-size: 1.2rem;
+}
+  
+.navigation-route-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.navigation-route-tab {
+    padding: 0.8rem 1.2rem;
+    background-color: #f5f5f5;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.navigation-route-tab:hover {
+    background-color: #eaeaea;
+}
+
+.navigation-route-tab.active {
+    background-color: #1b1b83;
+    color: white;
+    border-color: #1b1b83;
+}
+
+.navigation-route-icon {
+    margin-right: 0.5rem;
+}
+
+.navigation-route-type-badge {
+    font-size: 0.8rem;
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 0.3rem 0.6rem;
+    border-radius: 20px;
+    margin-left: 0.5rem;
+    font-weight: normal;
+}
+
 .navigation-route-summary-container {
     display: flex;
     justify-content: center;

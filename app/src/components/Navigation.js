@@ -5,6 +5,7 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import markerIconPng from 'leaflet/dist/images/marker-icon.png';
 import markerShadowPng from 'leaflet/dist/images/marker-shadow.png';
+import polyline from '@mapbox/polyline';
 import '../css/Navigation.css';
 import Footer from './Footer';
 import Header from './Header';
@@ -103,7 +104,8 @@ const Navigation = () => {
     const mapKey = Date.now();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-
+    const [allRoutes, setAllRoutes] = useState({});
+    const [activeRouteType, setActiveRouteType] = useState('fastest');
     const apiKey = process.env.REACT_APP_ORS_API_KEY;
 
     const MapClickHandler = () => {
@@ -127,26 +129,140 @@ const Navigation = () => {
             setError("Please select both start and destination points");
             return;
         }
-
+    
         setLoading(true);
         setError('');
-
-        const startCoords = `${start[1]},${start[0]}`;
-        const endCoords = `${end[1]},${end[0]}`;
-    
-        const url = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${apiKey}&start=${startCoords}&end=${endCoords}`;
     
         try {
-            const response = await axios.get(url);
-            const coordinates = response.data.features[0].geometry.coordinates.map(([lng, lat]) => [lat, lng]);
-            const summary = response.data.features[0].properties.summary;
-            setRoute(coordinates);
-            setSummary(summary); 
+            const coordinates = [
+                [start[1], start[0]], 
+                [end[1], end[0]]
+            ];
+    
+            const fastestResponse = await axios.post(
+                'https://api.openrouteservice.org/v2/directions/driving-car',
+                {
+                    coordinates: coordinates,
+                    preference: "fastest"
+                },
+                {
+                    headers: {
+                        'Authorization': apiKey,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json, application/geo+json'
+                    }
+                }
+            );
+    
+            const shortestResponse = await axios.post(
+                'https://api.openrouteservice.org/v2/directions/driving-car',
+                {
+                    coordinates: coordinates,
+                    preference: "shortest"
+                },
+                {
+                    headers: {
+                        'Authorization': apiKey,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json, application/geo+json'
+                    }
+                }
+            );
+    
+            const noTollsResponse = await axios.post(
+                'https://api.openrouteservice.org/v2/directions/driving-car',
+                {
+                    coordinates: coordinates,
+                    preference: "fastest",
+                    options: {
+                        avoid_features: ["tollways"]
+                    }
+                },
+                {
+                    headers: {
+                        'Authorization': apiKey,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json, application/geo+json'
+                    }
+                }
+            );
+    
+            const routes = {};
+        
+            if (fastestResponse.data?.routes?.[0]) {
+                const coords = parseRouteGeometry(fastestResponse.data.routes[0].geometry);
+                routes.fastest = {
+                    coordinates: coords,
+                    summary: fastestResponse.data.routes[0].summary,
+                    type: 'fastest'
+                };
+            }
+        
+            if (shortestResponse.data?.routes?.[0]) {
+                const coords = parseRouteGeometry(shortestResponse.data.routes[0].geometry);
+                routes.shortest = {
+                    coordinates: coords,
+                    summary: shortestResponse.data.routes[0].summary,
+                    type: 'shortest'
+                };
+            }
+        
+            if (noTollsResponse.data?.routes?.[0]) {
+                const coords = parseRouteGeometry(noTollsResponse.data.routes[0].geometry);
+                routes.noTolls = {
+                    coordinates: coords,
+                    summary: noTollsResponse.data.routes[0].summary,
+                    type: 'no tolls'
+                };
+            }
+        
+            const defaultRoute = routes.fastest || routes.shortest || routes.noTolls;
+        
+            if (defaultRoute) {
+                setRoute(defaultRoute.coordinates);
+                setSummary({
+                    ...defaultRoute.summary,
+                    routeType: defaultRoute.type
+                });
+                setAllRoutes(routes);
+                setActiveRouteType(defaultRoute.type);
+            } else {
+                setError("No routes found between these locations");
+            }
+        
             setLoading(false);
         } catch (error) {
-            console.error('Error fetching route:', error);
-            setError("An error occurred while fetching the route. Please try again.");
+            console.error('Error fetching routes:', error);
+            setError("An error occurred while fetching routes. Please try again.");
             setLoading(false);
+        }
+    };
+      
+    const parseRouteGeometry = (geometry) => {
+        if (Array.isArray(geometry)) {
+            return geometry.map(([lng, lat]) => [lat, lng]);
+        }
+        
+        if (typeof geometry === 'string') {
+            try {
+                return polyline.decode(geometry);
+            } catch (error) {
+                console.error('Error decoding polyline:', error);
+                return [];
+            }
+        }
+        
+        return [];
+    }
+      
+    const switchRoute = (routeType) => {
+        if (allRoutes[routeType]) {
+            setRoute(allRoutes[routeType].coordinates);
+            setSummary({
+                ...allRoutes[routeType].summary,
+                routeType
+            });
+            setActiveRouteType(routeType);
         }
     };
 
@@ -257,52 +373,98 @@ const Navigation = () => {
                     </div>
                 )}
 
-                {summary && (
-                    <div className="navigation-route-summary-container">
-                        <div className="navigation-route-summary">
-                            <div className="navigation-summary-header">
-                                <h3>Route Summary</h3>
+                {(Object.keys(allRoutes).length > 0 && summary) && (
+                    <div className='navigation-route-types-summary-container'>
+                        {Object.keys(allRoutes).length > 0 && (
+                            <div className="navigation-route-types">
+                                <h3>Route Options</h3>
+                                <div className="navigation-route-tabs">
+                                {allRoutes.fastest && (
+                                    <button 
+                                    className={`navigation-route-tab ${activeRouteType === 'fastest' ? 'active' : ''}`}
+                                    onClick={() => switchRoute('fastest')}
+                                    >
+                                    <span className="navigation-route-icon">⚡</span>
+                                    Fastest
+                                    </button>
+                                )}
+                                {allRoutes.shortest && (
+                                    <button 
+                                    className={`navigation-route-tab ${activeRouteType === 'shortest' ? 'active' : ''}`}
+                                    onClick={() => switchRoute('shortest')}
+                                    >
+                                    <span className="navigation-route-icon">📏</span>
+                                    Shortest
+                                    </button>
+                                )}
+                                {allRoutes.noTolls && (
+                                    <button 
+                                    className={`navigation-route-tab ${activeRouteType === 'noTolls' ? 'active' : ''}`}
+                                    onClick={() => switchRoute('noTolls')}
+                                    >
+                                    <span className="navigation-route-icon">💸</span>
+                                    No Tolls
+                                    </button>
+                                )}
+                                </div>
                             </div>
-                            <div className="navigation-summary-body">
-                                <div className="navigation-summary-item">
-                                    <div className="navigation-summary-item-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="#1b1b83">
-                                            <path d="M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z" />
-                                        </svg>
+                        )}
+
+                        {summary && (
+                            <div className="navigation-route-summary-container">
+                                <div className="navigation-route-summary">
+                                    <div className="navigation-summary-header">
+                                        <h3>Route Summary</h3>
+                                        {summary.routeType && (
+                                            <span className="navigation-route-type-badge">
+                                                {summary.routeType === 'fastest' && '⚡ Fastest'}
+                                                {summary.routeType === 'shortest' && '📏 Shortest'} 
+                                                {summary.routeType === 'noTolls' && '💸 No Tolls'}
+                                            </span>
+                                        )}
                                     </div>
-                                    <div className="navigation-summary-item-content">
-                                        <span className="navigation-summary-label">Distance</span>
-                                        <span className="navigation-summary-value">{(summary.distance / 1000).toFixed(1)} km</span>
+                                    <div className="navigation-summary-body">
+                                        <div className="navigation-summary-item">
+                                            <div className="navigation-summary-item-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="#1b1b83">
+                                                    <path d="M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z" />
+                                                </svg>
+                                            </div>
+                                            <div className="navigation-summary-item-content">
+                                                <span className="navigation-summary-label">Distance</span>
+                                                <span className="navigation-summary-value">{(summary.distance / 1000).toFixed(1)} km</span>
+                                            </div>
+                                        </div>
+                                        <div className="navigation-summary-item">
+                                            <div className="navigation-summary-item-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="#1b1b83">
+                                                    <path d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z" />
+                                                </svg>
+                                            </div>
+                                            <div className="navigation-summary-item-content">
+                                                <span className="navigation-summary-label">Duration</span>
+                                                <span className="navigation-summary-value">{formatDuration(summary.duration)}</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="navigation-summary-item">
-                                    <div className="navigation-summary-item-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="#1b1b83">
-                                            <path d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z" />
-                                        </svg>
+                                <div className="navigation-qr-code">
+                                    <div className="navigation-qr-header">
+                                        <h3>Share Route</h3>
                                     </div>
-                                    <div className="navigation-summary-item-content">
-                                        <span className="navigation-summary-label">Duration</span>
-                                        <span className="navigation-summary-value">{formatDuration(summary.duration)}</span>
+                                    <div className="navigation-qr-container">
+                                        <QRCodeSVG 
+                                            value={`https://www.google.com/maps/dir/?api=1&origin=${start?.[0]},${start?.[1]}&destination=${end?.[0]},${end?.[1]}`}
+                                            size={140} 
+                                            bgColor="#ffffff" 
+                                            fgColor="#000000" 
+                                            level="L" 
+                                            includeMargin={false}
+                                        />
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="navigation-qr-code">
-                            <div className="navigation-qr-header">
-                                <h3>Share Route</h3>
-                            </div>
-                            <div className="navigation-qr-container">
-                                <QRCodeSVG 
-                                    value={`https://www.google.com/maps/dir/?api=1&origin=${start?.[0]},${start?.[1]}&destination=${end?.[0]},${end?.[1]}`}
-                                    size={140} 
-                                    bgColor="#ffffff" 
-                                    fgColor="#000000" 
-                                    level="L" 
-                                    includeMargin={false}
-                                />
-                            </div>
-                        </div>
+                        )}
                     </div>
                 )}
 
