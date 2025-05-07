@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Polyline, useMap, useMapEvents } from 'react-leaflet';
-import axios from 'axios';
+import { MapContainer, TileLayer, Marker, Polyline, useMap, useMapEvents, Popup } from 'react-leaflet';import axios from 'axios';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import markerIconPng from 'leaflet/dist/images/marker-icon.png';
@@ -80,18 +79,179 @@ const FitBounds = ({ start, end, route }) => {
     const map = useMap();
 
     useEffect(() => {
-        if (!start || !end || route.length === 0) return;
+        if (!start && !end) {
+            const franceBounds = L.latLngBounds(
+                [41.3, -5.2], 
+                [51.2, 9.9]
+            );
+            map.fitBounds(franceBounds);
+            return;
+        }
 
-        try {
-            const bounds = L.latLngBounds(route);
-            map.fitBounds(bounds, { padding: [50, 50] });
-        } catch (err) {
-            console.error("Error fitting bounds:", err);
+        if (start && !end) {
+            map.setView(start, 6); 
+            return;
+        }
+
+        if (start && end && route.length === 0) {
+            const bounds = L.latLngBounds([start, end]);
+            map.fitBounds(bounds, { padding: [80, 80] });
+            return;
+        }
+
+        if (route.length > 0) {
+            try {
+                const bounds = L.latLngBounds(route);
+                map.fitBounds(bounds, { padding: [80, 80] });
+            } catch (err) {
+                console.error("Error fitting bounds:", err);
+            }
         }
     }, [start, end, route, map]);
 
     return null;
 };
+
+const EventMarkers = ({ events }) => {
+    const getEventIcon = (eventType) => {
+        let color = '#F44336'; 
+        let icon = '⚠️'; 
+        
+        switch(eventType) {
+            // Traffic conditions
+            case 'slow_traffic':
+                color = '#FFE500'; 
+                icon = '🚙'; 
+                break;
+            case 'heavy_traffic':
+                color = '#FF9800'; 
+                icon = '🚙'; 
+                break;
+            case 'standstill_traffic':
+                color = '#F44336'; 
+                icon = '🚙'; 
+                break;
+                
+            // Crashes
+            case 'pile_up_crash':
+                color = '#F44336';
+                icon = '💥'; 
+                break;
+                
+            // Police
+            case 'visible_police':
+                color = '#2196F3'; 
+                icon = '👮‍♂️';
+                break;
+            case 'hidden_police':
+                color = '#2196F3'; 
+                icon = '👮‍♂️'; 
+                break;
+                
+            // Hazards
+            case 'construction_hazard':
+                color = '#FF9800'; 
+                icon = '🚧'; 
+                break;
+            case 'car_on_shoulder_hazard':
+                color = '#FF9800'; 
+                icon = '🚘'; 
+                break;
+            case 'broken_traffic_light_hazard':
+                color = '#F44336'; 
+                icon = '🚦';
+                break;
+            case 'pothole_hazard':
+                color = '#FF9800'; 
+                icon = '⚠️'; 
+                break;
+            case 'object_hazard':
+                color = '#FF9800'; 
+                icon = '📦'; 
+                break;
+            case 'roadkill_hazard':
+                color = '#FFE500'; 
+                icon = '🦔'; 
+                break;
+                
+            // Blocked lanes
+            case 'left_blocked_lane':
+                color = '#FF9800'; 
+                icon = '⬅️'; 
+                break;
+            case 'right_blocked_lane':
+                color = '#FF9800'; 
+                icon = '➡️'; 
+                break;
+            case 'center_blocked_lane':
+                color = '#FF9800'; 
+                icon = '⬆️'; 
+                break;
+                
+            // Weather conditions
+            case 'slippery_road_weather':
+                color = '#2196F3';
+                icon = '❄️'; 
+                break;
+            case 'flooded_road_weather':
+                color = '#2196F3'; 
+                icon = '💧'; 
+                break;
+            case 'fog_weather':
+                color = '#BDBDBD';
+                icon = '☁️'; 
+                break;
+            case 'icy_road_weather':
+                color = '#2196F3'; 
+                icon = '🍃'; 
+                break;
+            
+            // Default case (for any unknown event types)
+            default:
+                color = '#F44336'; 
+                icon = '⚠️';
+                break;
+        }
+            
+        return L.divIcon({
+            className: 'navigation-custom-div-icon',
+            html: `
+                <div class="navigation-marker-pin navigation-event-pin" style="background-color: ${color};">
+                <span class="navigation-event-icon" style="transform: rotate(45deg);">${icon}</span>
+                </div>
+            `,
+            iconSize: [30, 40],
+            iconAnchor: [15, 40],
+            popupAnchor: [0, -35]
+        });
+    };
+
+    return (
+        <>
+            {events.map((event) => (
+                <Marker 
+                    key={event.id} 
+                    position={[event.location.coordinates[1], event.location.coordinates[0]]} 
+                    icon={getEventIcon(event.event_type)}
+                >
+                    <Popup>
+                        <div className="navigation-event-popup">
+                            <h4>{event.event_type.replace(/_/g, ' ').toUpperCase()}</h4>
+                            <p>{event.description}</p>
+                            <p className="navigation-event-time">
+                                {new Date(event.timestamp).toLocaleString()}
+                            </p>
+                            <div className="navigation-event-votes">
+                                <span className="navigation-event-upvotes">✅ {event.valid_votes}</span>
+                                <span className="navigation-event-downvotes">❌ {event.invalid_votes}</span>
+                            </div>
+                        </div>
+                    </Popup>
+                </Marker>
+            ))}
+        </>
+      );
+    };
 
 const Navigation = () => {
     const [start, setStart] = useState(null);
@@ -106,6 +266,7 @@ const Navigation = () => {
     const [error, setError] = useState('');
     const [allRoutes, setAllRoutes] = useState({});
     const [activeRouteType, setActiveRouteType] = useState('fastest');
+    const [events, setEvents] = useState([]);
     const apiKey = process.env.REACT_APP_ORS_API_KEY;
 
     const MapClickHandler = () => {
@@ -302,6 +463,21 @@ const Navigation = () => {
         }
     };
 
+    const fetchEvents = async () => {        
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/events`);
+            if (response.data) {
+                setEvents(response.data);
+            }
+        } catch (error) {
+            console.error('Error fetching events:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchEvents();
+    }, []);
+
     return (
         <>
             <Header />
@@ -471,7 +647,7 @@ const Navigation = () => {
                 <div className="navigation-map-wrapper">
                     <MapContainer 
                         key={mapKey}
-                        center={[46.6031, 1.8883]} 
+                        center={[46.2, 2.2]}
                         zoom={6} 
                         style={{ height: '100%', width: '100%' }}
                         className="navigation-map-container"
@@ -483,6 +659,7 @@ const Navigation = () => {
                         {start && <Marker position={start} icon={startIcon} />}
                         {end && <Marker position={end} icon={endIcon} />}
                         {route.length > 0 && <Polyline positions={route} color="#1b1b83" weight={5} opacity={0.7} />}
+                        <EventMarkers events={events} />
                         <MapClickHandler />
                         <FitBounds start={start} end={end} route={route} />
                     </MapContainer>

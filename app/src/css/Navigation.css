@@ -384,6 +384,65 @@
     border: none;
 }
 
+/* Events */
+.navigation-event-pin {
+    background-color: #f44336;
+    width: 30px;
+    height: 30px;
+    transform: rotate(-45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+  }
+  
+  .navigation-event-icon {
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .navigation-event-popup {
+    padding: 0.5rem;
+    width: 200px;
+  }
+  
+  .navigation-event-popup h4 {
+    margin: 0 0 0.5rem 0;
+    color: #1b1b83;
+    text-transform: capitalize;
+    font-size: 1rem;
+  }
+  
+  .navigation-event-popup p {
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+    text-align: left;
+  }
+  
+  .navigation-event-time {
+    color: #666;
+    font-size: 0.8rem !important;
+    font-style: italic;
+  }
+  
+  .navigation-event-votes {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+  }
+  
+  .navigation-event-upvotes {
+    color: #4caf50;
+    font-weight: bold;
+  }
+  
+  .navigation-event-downvotes {
+    color: #f44336;
+    font-weight: bold;
+  }
+
 /* Leaflet CSS */
 .navigation-leaflet-control-container {
     z-index: 800;
