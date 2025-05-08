@@ -394,7 +394,7 @@ const Navigation = () => {
             setLoading(false);
         } catch (error) {
             console.error('Error fetching routes:', error);
-            setError("An error occurred while fetching routes. Please try again.");
+            setError("Sorry the route for this destination is not available.");
             setLoading(false);
         }
     };
