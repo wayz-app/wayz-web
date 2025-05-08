@@ -630,13 +630,14 @@ const Navigation = () => {
                                     </div>
                                     <div className="navigation-qr-container">
                                         <QRCodeSVG 
-                                            value={`https://www.google.com/maps/dir/?api=1&origin=${start?.[0]},${start?.[1]}&destination=${end?.[0]},${end?.[1]}`}
+                                            value={`wayz://navigate?startLat=${start?.[0]}&startLng=${start?.[1]}&endLat=${end?.[0]}&endLng=${end?.[1]}&routeType=${activeRouteType}`}
                                             size={140} 
                                             bgColor="#ffffff" 
                                             fgColor="#000000" 
                                             level="L" 
                                             includeMargin={false}
                                         />
+                                        <p className="navigation-qr-caption">Scan to open in Wayz iOS app with {activeRouteType} route</p>
                                     </div>
                                 </div>
                             </div>
