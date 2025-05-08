@@ -98,66 +98,68 @@ const Home = () => {
                     {/* Feature Comparison Section */}
                     <div className="home-comparison-section">
                         <h2>Compare Wayz</h2>
-                        <table className="home-comparison-table">
-                            <thead>
-                                <tr>
-                                    <th>Feature</th>
-                                    <th>Wayz</th>
-                                    <th>Waze</th>
-                                    <th>Google Maps</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Real-time Navigation</td>
-                                    <td className="home-feature-available">✓</td>
-                                    <td className="home-feature-available">✓</td>
-                                    <td className="home-feature-available">✓</td>
-                                </tr>
-                                <tr>
-                                    <td>Incident Reporting</td>
-                                    <td className="home-feature-available">✓</td>
-                                    <td className="home-feature-available">✓</td>
-                                    <td className="home-feature-unavailable">✗</td>
-                                </tr>
-                                <tr>
-                                    <td>Community Validation</td>
-                                    <td className="home-feature-available">✓</td>
-                                    <td className="home-feature-available">✓</td>
-                                    <td className="home-feature-unavailable">✗</td>
-                                </tr>
-                                <tr>
-                                    <td>Traffic Alerts</td>
-                                    <td className="home-feature-available">✓</td>
-                                    <td className="home-feature-available">✓</td>
-                                    <td className="home-feature-available">✓</td>
-                                </tr>
-                                <tr>
-                                    <td>Cost-Based Routing</td>
-                                    <td className="home-feature-available">✓</td>
-                                    <td className="home-feature-unavailable">✗</td>
-                                    <td className="home-feature-available">✓</td>
-                                </tr>
-                                <tr>
-                                    <td>Web Interface</td>
-                                    <td className="home-feature-available">✓</td>
-                                    <td className="home-feature-unavailable">✗</td>
-                                    <td className="home-feature-available">✓</td>
-                                </tr>
-                                <tr>
-                                    <td>QR Code Sharing</td>
-                                    <td className="home-feature-available">✓</td>
-                                    <td className="home-feature-unavailable">✗</td>
-                                    <td className="home-feature-unavailable">✗</td>
-                                </tr>
-                                <tr>
-                                    <td>Predictive Traffic Insights</td>
-                                    <td className="home-feature-available">✓</td>
-                                    <td className="home-feature-unavailable">✗</td>
-                                    <td className="home-feature-available">✓</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div className="home-comparison-table-wrapper">
+                            <table className="home-comparison-table">
+                                <thead>
+                                    <tr>
+                                        <th>Feature</th>
+                                        <th>Wayz</th>
+                                        <th>Waze</th>
+                                        <th>Google Maps</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Real-time Navigation</td>
+                                        <td className="home-feature-available">✓</td>
+                                        <td className="home-feature-available">✓</td>
+                                        <td className="home-feature-available">✓</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Incident Reporting</td>
+                                        <td className="home-feature-available">✓</td>
+                                        <td className="home-feature-available">✓</td>
+                                        <td className="home-feature-unavailable">✗</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Community Validation</td>
+                                        <td className="home-feature-available">✓</td>
+                                        <td className="home-feature-available">✓</td>
+                                        <td className="home-feature-unavailable">✗</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Traffic Alerts</td>
+                                        <td className="home-feature-available">✓</td>
+                                        <td className="home-feature-available">✓</td>
+                                        <td className="home-feature-available">✓</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cost-Based Routing</td>
+                                        <td className="home-feature-available">✓</td>
+                                        <td className="home-feature-unavailable">✗</td>
+                                        <td className="home-feature-available">✓</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Web Interface</td>
+                                        <td className="home-feature-available">✓</td>
+                                        <td className="home-feature-unavailable">✗</td>
+                                        <td className="home-feature-available">✓</td>
+                                    </tr>
+                                    <tr>
+                                        <td>QR Code Sharing</td>
+                                        <td className="home-feature-available">✓</td>
+                                        <td className="home-feature-unavailable">✗</td>
+                                        <td className="home-feature-unavailable">✗</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Predictive Traffic Insights</td>
+                                        <td className="home-feature-available">✓</td>
+                                        <td className="home-feature-unavailable">✗</td>
+                                        <td className="home-feature-available">✓</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

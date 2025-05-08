@@ -1,8 +1,10 @@
+/* Base styles */
 .navigation-navigate-content {
-    padding: 2rem;
+    padding: 2rem 1.5rem;
     max-width: 1200px;
     margin: 0 auto;
     color: #1A1A2E;
+    box-sizing: border-box;
 }
 
 .navigation-navigate-content h1 {
@@ -42,27 +44,31 @@
 /* Search Container */
 .navigation-search-container {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
     margin-bottom: 2rem;
     gap: 1rem;
+    width: 100%;
 }
 
 .navigation-search-box {
     position: relative;
     flex: 1;
     min-width: 200px;
+    width: 100%;
 }
 
 .navigation-search-box input {
-    width: 90%;
+    width: 100%;
     padding: 0.8rem 1.2rem;
     font-size: 1rem;
     border: 1px solid #e1e4e8;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.03);
     transition: all 0.3s ease;
+    box-sizing: border-box;
+    -webkit-appearance: none;
 }
 
 .navigation-search-box input:focus {
@@ -99,6 +105,8 @@
     display: flex;
     justify-content: center;
     flex: 0 0 auto;
+    width: 100%;
+    max-width: 300px;
 }
 
 .navigation-route-actions button {
@@ -113,6 +121,8 @@
     font-weight: 600;
     box-shadow: 0 4px 12px rgba(255, 107, 0, 0.3);
     white-space: nowrap;
+    width: 100%;
+    -webkit-appearance: none;
 }
 
 .navigation-route-actions button:hover {
@@ -137,6 +147,7 @@
     font-weight: 500;
     max-width: 700px;
     text-align: center;
+    box-sizing: border-box;
 }
 
 /* Map Container */
@@ -150,6 +161,7 @@
     position: relative;
     z-index: 1;
     border: 1px solid rgba(0, 0, 0, 0.05);
+    box-sizing: border-box;
 }
 
 .navigation-map-container {
@@ -162,13 +174,15 @@
 .navigation-route-types-summary-container {
     background-color: #fff;
     border-radius: 12px;
-    padding: 1rem;
+    padding: 1.5rem;
     margin-bottom: 1.5rem;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    box-sizing: border-box;
 }
 
 .navigation-route-types {
     text-align: center;
+    margin-bottom: 1rem;
 }
 
 .navigation-route-types h3 {
@@ -182,6 +196,7 @@
     display: flex;
     justify-content: center;
     gap: 1rem;
+    flex-wrap: wrap;
 }
 
 .navigation-route-tab {
@@ -194,6 +209,11 @@
     align-items: center;
     font-weight: 500;
     transition: all 0.2s ease;
+    flex: 1;
+    justify-content: center;
+    min-width: 120px;
+    max-width: 200px;
+    -webkit-appearance: none;
 }
 
 .navigation-route-tab:hover {
@@ -252,6 +272,11 @@
     background: linear-gradient(to right, #f0f4ff, #e6f0fe);
     padding: 1.2rem 1.5rem;
     border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
 }
 
 .navigation-summary-header h3,
@@ -286,6 +311,7 @@
     width: 42px;
     height: 42px;
     transition: all 0.2s ease;
+    flex-shrink: 0;
 }
 
 .navigation-summary-item:hover .navigation-summary-item-icon {
@@ -296,6 +322,7 @@
 .navigation-summary-item-content {
     display: flex;
     flex-direction: column;
+    flex: 1;
 }
 
 .navigation-summary-label {
@@ -394,54 +421,54 @@
     align-items: center;
     justify-content: center;
     color: white;
-  }
+}
   
-  .navigation-event-icon {
+.navigation-event-icon {
     font-size: 0.9rem;
     display: flex;
     align-items: center;
     justify-content: center;
-  }
+}
   
-  .navigation-event-popup {
+.navigation-event-popup {
     padding: 0.5rem;
     width: 200px;
-  }
+}
   
-  .navigation-event-popup h4 {
+.navigation-event-popup h4 {
     margin: 0 0 0.5rem 0;
     color: #1b1b83;
     text-transform: capitalize;
     font-size: 1rem;
-  }
+}
   
-  .navigation-event-popup p {
+.navigation-event-popup p {
     margin: 0.5rem 0;
     font-size: 0.9rem;
     text-align: left;
-  }
+}
   
-  .navigation-event-time {
+.navigation-event-time {
     color: #666;
     font-size: 0.8rem !important;
     font-style: italic;
-  }
+}
   
-  .navigation-event-votes {
+.navigation-event-votes {
     display: flex;
     justify-content: space-between;
     margin-top: 0.5rem;
-  }
+}
   
-  .navigation-event-upvotes {
+.navigation-event-upvotes {
     color: #4caf50;
     font-weight: bold;
-  }
+}
   
-  .navigation-event-downvotes {
+.navigation-event-downvotes {
     color: #f44336;
     font-weight: bold;
-  }
+}
 
 /* Leaflet CSS */
 .navigation-leaflet-control-container {
@@ -481,33 +508,35 @@
     z-index: 900 !important;
 }
 
-/* Responsive adjustments */
+/* Enhanced responsive styles */
+@media (max-width: 1200px) {
+    .navigation-navigate-content {
+        padding: 1.8rem 1.5rem;
+    }
+    
+    .navigation-map-wrapper {
+        height: 450px;
+    }
+}
+
 @media (max-width: 992px) {
     .navigation-search-container {
         flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
     }
     
     .navigation-search-box {
         width: 100%;
-        margin-bottom: 1rem;
+        flex: none;
     }
     
     .navigation-route-actions {
         width: 100%;
-    }
-}
-
-@media (max-width: 768px) {
-    .navigation-navigate-content {
-        padding: 1.5rem;
+        max-width: none;
     }
     
-    .navigation-route-summary-container {
-        flex-direction: column;
-    }
-    
-    .navigation-route-summary,
-    .navigation-qr-code {
+    .navigation-route-actions button {
         width: 100%;
     }
     
@@ -515,11 +544,231 @@
         height: 400px;
     }
     
+    .navigation-route-summary, 
+    .navigation-qr-code {
+        min-width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .navigation-navigate-content {
+        padding: 1.2rem 1rem;
+    }
+    
     .navigation-navigate-content h1 {
         font-size: 2rem;
     }
     
+    .navigation-navigate-content h1::after {
+        width: 60px;
+        height: 3px;
+    }
+    
     .navigation-navigate-content p {
         font-size: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .navigation-route-types-summary-container {
+        padding: 1rem;
+    }
+    
+    .navigation-summary-header, 
+    .navigation-qr-header {
+        padding: 1rem;
+    }
+    
+    .navigation-summary-body {
+        padding: 1rem;
+    }
+    
+    .navigation-route-tab {
+        padding: 0.6rem 1rem;
+        min-width: 100px;
+    }
+    
+    .navigation-map-wrapper {
+        height: 350px;
+        margin: 1.5rem auto;
+    }
+}
+
+@media (max-width: 576px) {
+    .navigation-navigate-content {
+        padding: 1rem 0.8rem;
+    }
+    
+    .navigation-navigate-content h1 {
+        font-size: 1.7rem;
+        margin-bottom: 0.8rem;
+    }
+    
+    .navigation-navigate-content h1::after {
+        width: 50px;
+        bottom: -8px;
+    }
+    
+    .navigation-navigate-content p {
+        font-size: 0.95rem;
+        margin-bottom: 1.2rem;
+    }
+    
+    .navigation-search-box input {
+        padding: 0.7rem 1rem;
+    }
+    
+    .navigation-route-actions button {
+        padding: 0.7rem 1.2rem;
+        font-size: 0.95rem;
+    }
+    
+    .navigation-route-tabs {
+        gap: 0.5rem;
+    }
+    
+    .navigation-route-tab {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.9rem;
+        min-width: 80px;
+    }
+    
+    .navigation-route-type-badge {
+        font-size: 0.75rem;
+        padding: 0.2rem 0.5rem;
+    }
+    
+    .navigation-summary-item-icon {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .navigation-summary-value {
+        font-size: 1.1rem;
+    }
+    
+    .navigation-map-wrapper {
+        height: 300px;
+        margin: 1.2rem auto;
+    }
+    
+    .navigation-qr-container {
+        padding: 1rem;
+        min-height: 160px;
+    }
+}
+
+@media (max-width: 400px) {
+    .navigation-navigate-content h1 {
+        font-size: 1.5rem;
+    }
+    
+    .navigation-navigate-content p {
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+    
+    .navigation-route-tab {
+        min-width: 100%;
+        margin-bottom: 0.4rem;
+    }
+    
+    .navigation-map-wrapper {
+        height: 250px;
+    }
+    
+    .navigation-summary-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .navigation-summary-item-icon {
+        margin-bottom: 0.5rem;
+        margin-right: 0;
+    }
+}
+
+/* Touch device optimizations */
+@media (hover: none) {
+    .navigation-route-summary:hover,
+    .navigation-qr-code:hover,
+    .navigation-custom-div-icon:hover .navigation-marker-pin-start,
+    .navigation-custom-div-icon:hover .navigation-marker-pin,
+    .navigation-summary-item:hover .navigation-summary-item-icon {
+        transform: none;
+        box-shadow: initial;
+    }
+    
+    .navigation-route-actions button:active,
+    .navigation-route-tab:active {
+        transform: scale(0.98);
+    }
+}
+
+/* Landscape mode on mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+    .navigation-navigate-content {
+        padding: 1rem 0.8rem;
+    }
+    
+    .navigation-navigate-content h1 {
+        font-size: 1.6rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .navigation-navigate-content p {
+        margin-bottom: 1rem;
+    }
+    
+    .navigation-map-wrapper {
+        height: 200px;
+        margin: 1rem auto;
+    }
+    
+    .navigation-search-container {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    
+    .navigation-search-box {
+        flex: 1 0 40%;
+    }
+    
+    .navigation-route-actions {
+        flex: 0 0 auto;
+        width: auto;
+    }
+}
+
+/* Fix for high-resolution displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .navigation-marker-pin,
+    .navigation-event-pin {
+        border-width: 1px;
+    }
+}
+
+/* Print styles */
+@media print {
+    .navigation-navigate-content {
+        padding: 0;
+    }
+    
+    .navigation-route-actions,
+    .navigation-qr-code {
+        display: none;
+    }
+    
+    .navigation-map-wrapper {
+        height: 400px;
+        break-inside: avoid;
+        page-break-inside: avoid;
+        border: 1px solid #ccc;
+        box-shadow: none;
+    }
+    
+    .navigation-route-summary,
+    .navigation-route-types-summary-container {
+        box-shadow: none;
+        border: 1px solid #ccc;
     }
 }
