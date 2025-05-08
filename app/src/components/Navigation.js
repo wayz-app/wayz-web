@@ -285,6 +285,19 @@ const Navigation = () => {
         return null;
     };
 
+    const handleClear = () => {
+        setStart(null);
+        setEnd(null);
+        setRoute([]);
+        setStartInput('');
+        setEndInput('');
+        setSuggestions({ start: [], end: [] });
+        setSummary(null);
+        setAllRoutes({});
+        setActiveRouteType('fastest');
+        setError('');
+    };
+
     const getRoute = async () => {
         if (!start || !end) {
             setError("Please select both start and destination points");
@@ -539,6 +552,13 @@ const Navigation = () => {
                     <div className="navigation-route-actions">
                         <button onClick={getRoute} disabled={loading}>
                             {loading ? 'Calculating...' : 'Generate Route'}
+                        </button>
+                        <button 
+                            onClick={handleClear} 
+                            className="navigation-clear-button"
+                            disabled={loading}
+                        >
+                            Clear
                         </button>
                     </div>
                 </div>
