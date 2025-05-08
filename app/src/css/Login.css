@@ -9,6 +9,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    box-sizing: border-box;
 }
 
 .login-content h1 {
@@ -18,6 +19,7 @@
     margin-bottom: 1.5rem;
     position: relative;
     display: inline-block;
+    text-align: center;
 }
 
 .login-content h1::after {
@@ -44,6 +46,7 @@
     text-align: center;
     border-left: 4px solid #c62828;
     font-weight: 500;
+    box-sizing: border-box;
 }
 
 /* Login form */
@@ -56,6 +59,7 @@
     max-width: 400px;
     margin-bottom: 2rem;
     border: 1px solid rgba(0, 0, 0, 0.05);
+    box-sizing: border-box;
 }
 
 .login-form .form-group {
@@ -78,6 +82,9 @@
     box-sizing: border-box;
     font-size: 1rem;
     transition: all 0.3s ease;
+    -webkit-appearance: none; /* Fixes iOS styling issues */
+    background-color: white;
+    color: #333;
 }
 
 .login-form input:focus {
@@ -100,6 +107,7 @@
     transition: all 0.3s ease;
     margin-top: 1rem;
     box-shadow: 0 2px 5px rgba(27, 27, 131, 0.2);
+    -webkit-appearance: none; /* Fixes iOS styling issues */
 }
 
 .login-button:hover {
@@ -130,11 +138,10 @@
     align-items: center;
     justify-content: center;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    -webkit-appearance: none; /* Fixes iOS styling issues */
 }
 
-.google-login-button img {
-    width: 20px;
-    height: 20px;
+.google-login-button svg {
     margin-right: 0.8rem;
 }
 
@@ -168,6 +175,7 @@
     margin: 0 1rem;
     color: #777;
     font-size: 0.9rem;
+    white-space: nowrap;
 }
 
 /* Register Link */
@@ -190,10 +198,11 @@
     color: #d15700;
 }
 
-/* Responsive Design */
+/* Responsive Design for different screen sizes */
 @media (max-width: 768px) {
     .login-content {
-        padding: 1.5rem 1rem;
+        padding: 2rem 1rem;
+        min-height: 60vh;
     }
     
     .login-content h1 {
@@ -202,5 +211,78 @@
     
     .login-form {
         padding: 1.5rem;
+        max-width: 100%;
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+    
+    .error-message {
+        max-width: 100%;
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+}
+
+/* Small mobile screens */
+@media (max-width: 480px) {
+    .login-content {
+        padding: 1.5rem 0.75rem;
+    }
+    
+    .login-content h1 {
+        font-size: 1.75rem;
+    }
+    
+    .login-form {
+        padding: 1.25rem;
+    }
+    
+    .login-form input,
+    .login-button,
+    .google-login-button {
+        padding: 0.7rem 0.9rem;
+    }
+    
+    .google-login-button {
+        font-size: 0.9rem;
+    }
+    
+    .login-button {
+        font-size: 0.9rem;
+    }
+}
+
+/* Fix for iOS input zooming */
+@media screen and (max-width: 768px) {
+    input, select, textarea {
+        font-size: 16px !important;
+    }
+}
+
+/* Landscape orientation on mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+    .login-content {
+        padding: 1rem;
+        min-height: auto;
+    }
+    
+    .login-form {
+        margin-bottom: 1rem;
+    }
+    
+    .login-content h1 {
+        margin-bottom: 1rem;
+        font-size: 1.8rem;
+    }
+    
+    .login-form .form-group {
+        margin-bottom: 1rem;
+    }
+}
+
+/* High-resolution screens */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .login-form {
+        border-width: 0.5px;
     }
 }

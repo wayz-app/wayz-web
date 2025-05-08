@@ -1,8 +1,10 @@
+/* Base Styles */
 .home-component {
     padding: 1rem 2rem;
     min-height: 70vh;
     background-color: #FAFAFA;
     color: #1A1A2E;
+    box-sizing: border-box;
 }
 
 .home-content {
@@ -66,6 +68,7 @@
     transition: all 0.3s ease;
     box-shadow: 0 4px 12px rgba(255, 107, 0, 0.2);
     margin-top: 1.5rem;
+    -webkit-appearance: none; /* Fixes iOS styling issues */
 }
 
 .home-cta-button:hover {
@@ -206,6 +209,7 @@
     padding: 2rem;
     margin-bottom: 2.5rem;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    overflow-x: auto; 
 }
 
 .home-comparison-section h2 {
@@ -235,32 +239,40 @@
     width: 100%;
     border-collapse: collapse;
     margin: 1.2rem auto 0;
+    table-layout: fixed; 
+}
+
+.home-comparison-table th,
+.home-comparison-table td {
+    padding: 0.6rem 0.4rem;
+    text-align: center; 
+    border-bottom: 1px solid #eee;
 }
 
 .home-comparison-table th {
     background-color: #f5f7fa;
     color: #1b1b83;
     font-weight: 600;
-    padding: 0.8rem;
-    text-align: left;
     border-bottom: 2px solid #eee;
     font-size: 0.9rem;
 }
 
 .home-comparison-table td {
-    padding: 0.8rem;
-    border-bottom: 1px solid #eee;
     color: #555;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
 }
 
-.home-comparison-table tr:last-child td {
-    border-bottom: none;
-}
-
+.home-comparison-table th:first-child,
 .home-comparison-table td:first-child {
+    text-align: left;
     font-weight: 500;
     color: #333;
+    width: 35%; 
+}
+
+/* Style the company name columns */
+.home-comparison-table th:not(:first-child) {
+    width: calc(65% / 3);
 }
 
 .home-feature-available {
@@ -275,7 +287,14 @@
     font-size: 1rem;
 }
 
-/* Responsive styles */
+/* Responsive styles for tablets */
+@media (max-width: 900px) {
+    .home-key-numbers-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+}
+
+/* Responsive styles for smaller tablets and large phones */
 @media (max-width: 768px) {
     .home-component {
         padding: 1rem;
@@ -287,6 +306,7 @@
     
     .home-hero-section {
         padding: 2rem 1rem;
+        margin-bottom: 2rem;
     }
     
     .home-hero-section h1 {
@@ -302,24 +322,231 @@
         font-size: 0.95rem;
     }
     
+    .home-download-section {
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .home-comparison-section {
+        padding: 1.5rem 1rem;
+        margin-bottom: 2rem;
+    }
+    
+    .home-download-buttons {
+        gap: 1rem;
+    }
+    
     .home-key-numbers-grid {
         grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .home-key-number-card {
+        padding: 1.25rem;
+    }
+    
+    .home-key-number-value {
+        font-size: 2rem;
     }
     
     .home-comparison-table {
+        min-width: 450px; 
+    }
+    
+    .home-comparison-table th,
+    .home-comparison-table td {
+        padding: 0.6rem 0.3rem;
+    }
+    
+    .home-comparison-table th {
+        font-size: 0.9rem;
+    }
+    
+    .home-comparison-table td {
         font-size: 0.85rem;
+    }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+    .home-component {
+        padding: 0.75rem;
+    }
+    
+    .home-hero-section {
+        padding: 1.5rem 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .home-hero-section h1 {
+        font-size: 1.75rem;
+    }
+    
+    .home-hero-section p {
+        font-size: 0.95rem;
+    }
+    
+    .home-cta-button {
+        padding: 0.7rem 1.2rem;
+        font-size: 0.9rem;
+        margin-top: 1.2rem;
+    }
+    
+    .home-download-section h2,
+    .home-key-numbers-title,
+    .home-comparison-section h2 {
+        font-size: 1.35rem;
+    }
+    
+    .home-download-section p {
+        font-size: 0.95rem;
+    }
+    
+    .home-store-badge {
+        height: 40px;
+    }
+    
+    .home-key-number-value {
+        font-size: 1.8rem;
+    }
+    
+    .home-key-number-card h3 {
+        font-size: 1rem;
+    }
+    
+    .home-download-section,
+    .home-comparison-section {
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
     }
     
     .home-comparison-table th,
     .home-comparison-table td {
         padding: 0.6rem;
+        font-size: 0.8rem;
+    }
+
+    .home-comparison-table th:first-child,
+    .home-comparison-table td:first-child {
+        width: 30%;
     }
     
-    .home-comparison-table th {
-        font-size: 0.85rem;
+    .home-comparison-table th:not(:first-child),
+    .home-comparison-table td:not(:first-child) {
+        width: calc(70% / 3); 
     }
     
-    .home-comparison-table td {
-        font-size: 0.85rem;
+    .home-feature-available,
+    .home-feature-unavailable {
+        font-size: 0.9rem;
+    }
+
+    .home-comparison-section::after {
+        content: '← scroll →';
+        display: block;
+        text-align: center;
+        font-size: 0.8rem;
+        color: #777;
+        padding-top: 0.5rem;
+        margin-top: 0.5rem;
+        border-top: 1px solid #eee;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 360px) {
+    .home-hero-section h1 {
+        font-size: 1.5rem;
+    }
+    
+    .home-hero-section p {
+        font-size: 0.9rem;
+    }
+    
+    .home-cta-button {
+        width: 100%;
+    }
+    
+    .home-store-badge {
+        height: 35px;
+    }
+}
+
+/* Landscape orientation adjustments */
+@media (max-height: 500px) and (orientation: landscape) {
+    .home-hero-section {
+        padding: 1rem;
+    }
+    
+    .home-hero-section h1 {
+        margin-bottom: 0.5rem;
+    }
+    
+    .home-hero-section p {
+        margin: 0.1rem 0;
+    }
+    
+    .home-cta-button {
+        margin-top: 0.8rem;
+    }
+    
+    .home-key-numbers-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .home-key-number-card {
+        padding: 1rem;
+    }
+}
+
+/* Handle high-resolution screens */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .home-hero-section,
+    .home-download-section,
+    .home-key-number-card,
+    .home-comparison-section {
+        border-width: 0.5px;
+    }
+}
+
+/* Touch device optimizations */
+@media (hover: none) {
+    .home-key-number-card:hover {
+        transform: none;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+    
+    .home-store-badge:hover {
+        transform: none;
+    }
+    
+    .home-cta-button:active,
+    .home-store-badge:active {
+        transform: scale(0.98);
+    }
+}
+
+/* Print styles for better printing */
+@media print {
+    .home-component {
+        background-color: white;
+        padding: 0;
+    }
+    
+    .home-hero-section,
+    .home-download-section,
+    .home-key-number-card,
+    .home-comparison-section {
+        box-shadow: none;
+        border: 1px solid #ddd;
+        break-inside: avoid;
+    }
+    
+    .home-cta-button {
+        display: none;
+    }
+    
+    .home-comparison-table {
+        border: 1px solid #ddd;
     }
 }
