@@ -32,8 +32,8 @@ cd wayz-web/app
 
 2. Create a .env file at the root (use the .env.example file as an example) to insert your information :
 ```bash
-REACT_APP_API_URL=http://localhost:8000 
-REACT_APP_ORS_API_KEY=5b3ce3597851110001cf6248e9095669c4e345e8b17826953808d978
+REACT_APP_API_URL=
+REACT_APP_ORS_API_KEY=
 ```
 
 2. Create and Launch the Container
