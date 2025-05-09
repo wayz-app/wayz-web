@@ -9,6 +9,7 @@ import '../css/Navigation.css';
 import Footer from './Footer';
 import Header from './Header';
 import { QRCodeSVG } from 'qrcode.react';
+import { FaLocationArrow } from 'react-icons/fa';
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -298,6 +299,35 @@ const Navigation = () => {
         setError('');
     };
 
+    const getCurrentLocation = () => {
+        if (!navigator.geolocation) {
+            setError("Votre navigateur ne prend pas en charge la géolocalisation");
+            return;
+        }
+        
+        setLoading(true);
+        
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const { latitude, longitude } = position.coords;
+                setStart([latitude, longitude]);
+                setStartInput(`${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
+                
+                setLoading(false);
+            },
+            (error) => {
+                console.error("Error getting current location:", error);
+                setError("Impossible d'obtenir votre position actuelle");
+                setLoading(false);
+            },
+            { 
+                enableHighAccuracy: true,
+                timeout: 5000,
+                maximumAge: 0
+            }
+        );
+    };
+
     const calculateAdditionalDuration = (route, events) => {
         if (!route || route.length === 0 || !events || events.length === 0) {
             return 0;
@@ -543,28 +573,38 @@ const Navigation = () => {
 
                 <div className="navigation-search-container">
                     <div className="navigation-search-box">
-                        <input
-                            type="text"
-                            placeholder="Enter start location"
-                            value={startInput}
-                            onChange={(e) => {
-                                setStartInput(e.target.value);
-                                fetchSuggestions(e.target.value, 'start');
-                            }}
-                        />
-                        {suggestions.start.length > 0 && (
-                            <div className="navigation-suggestions">
-                                {suggestions.start.map((item, index) => (
-                                    <div 
-                                        key={index} 
-                                        className="navigation-suggestion" 
-                                        onClick={() => selectLocation(item.name, item.coords, 'start')}
-                                    >
-                                        {item.name}
-                                    </div>
-                                ))}
-                            </div>
-                        )}
+                        <div className="navigation-input-with-icon">
+                            <input
+                                type="text"
+                                placeholder="Enter start location"
+                                value={startInput}
+                                onChange={(e) => {
+                                    setStartInput(e.target.value);
+                                    fetchSuggestions(e.target.value, 'start');
+                                }}
+                            />
+                            <button 
+                                className="navigation-location-button" 
+                                onClick={getCurrentLocation} 
+                                title="Use current location"
+                                disabled={loading}
+                            >
+                                <FaLocationArrow />
+                            </button>
+                        </div>
+                            {suggestions.start.length > 0 && (
+                                <div className="navigation-suggestions">
+                                    {suggestions.start.map((item, index) => (
+                                        <div 
+                                            key={index} 
+                                            className="navigation-suggestion" 
+                                            onClick={() => selectLocation(item.name, item.coords, 'start')}
+                                        >
+                                            {item.name}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                     </div>
 
                     <div className="navigation-search-box">
