@@ -298,6 +298,30 @@ const Navigation = () => {
         setError('');
     };
 
+    const calculateAdditionalDuration = (route, events) => {
+        if (!route || route.length === 0 || !events || events.length === 0) {
+            return 0;
+        }
+      
+        const routeBounds = L.latLngBounds(route);
+        routeBounds.extend([
+            [routeBounds.getSouth() - 0.01, routeBounds.getWest() - 0.01],
+            [routeBounds.getNorth() + 0.01, routeBounds.getEast() + 0.01]
+        ]);
+        
+        const relevantEvents = events.filter(event => {
+            const eventLat = event.location.coordinates[1];
+            const eventLng = event.location.coordinates[0];
+            return routeBounds.contains([eventLat, eventLng]);
+        });
+        
+        const additionalDuration = relevantEvents.reduce((total, event) => {
+            return total + (event.estimated_duration || 0);
+        }, 0);
+        
+        return additionalDuration * 60;
+    };
+
     const getRoute = async () => {
         if (!start || !end) {
             setError("Please select both start and destination points");
@@ -365,28 +389,47 @@ const Navigation = () => {
         
             if (fastestResponse.data?.routes?.[0]) {
                 const coords = parseRouteGeometry(fastestResponse.data.routes[0].geometry);
+                
+                const additionalDuration = calculateAdditionalDuration(coords, events);
+                
                 routes.fastest = {
                     coordinates: coords,
-                    summary: fastestResponse.data.routes[0].summary,
+                    summary: {
+                        ...fastestResponse.data.routes[0].summary,
+                        duration: fastestResponse.data.routes[0].summary.duration + additionalDuration,
+                        additionalDuration: additionalDuration
+                    },
                     type: 'fastest'
                 };
             }
-        
+              
             if (shortestResponse.data?.routes?.[0]) {
                 const coords = parseRouteGeometry(shortestResponse.data.routes[0].geometry);
+                const additionalDuration = calculateAdditionalDuration(coords, events);
+                
                 routes.shortest = {
                     coordinates: coords,
-                    summary: shortestResponse.data.routes[0].summary,
+                    summary: {
+                        ...shortestResponse.data.routes[0].summary,
+                        duration: shortestResponse.data.routes[0].summary.duration + additionalDuration,
+                        additionalDuration: additionalDuration
+                    },
                     type: 'shortest'
                 };
             }
-        
+              
             if (noTollsResponse.data?.routes?.[0]) {
                 const coords = parseRouteGeometry(noTollsResponse.data.routes[0].geometry);
+                const additionalDuration = calculateAdditionalDuration(coords, events);
+                
                 routes.noTolls = {
-                    coordinates: coords,
-                    summary: noTollsResponse.data.routes[0].summary,
-                    type: 'no tolls'
+                coordinates: coords,
+                summary: {
+                    ...noTollsResponse.data.routes[0].summary,
+                    duration: noTollsResponse.data.routes[0].summary.duration + additionalDuration,
+                    additionalDuration: additionalDuration
+                },
+                type: 'no tolls'
                 };
             }
         
@@ -640,6 +683,15 @@ const Navigation = () => {
                                             <div className="navigation-summary-item-content">
                                                 <span className="navigation-summary-label">Duration</span>
                                                 <span className="navigation-summary-value">{formatDuration(summary.duration)}</span>
+                                                
+                                                {summary.additionalDuration > 0 && (
+                                                    <div className="navigation-traffic-impact">
+                                                        <span className="navigation-traffic-impact-icon">⚠️</span>
+                                                        <span className="navigation-traffic-impact-text">
+                                                            Including {formatDuration(summary.additionalDuration)} from traffic events
+                                                        </span>
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                     </div>
