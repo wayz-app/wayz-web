@@ -328,26 +328,79 @@ const Navigation = () => {
         );
     };
 
+    const routeCache = {
+        lastStart: null,
+        lastEnd: null,
+        relevantEventIds: {}
+    };
+  
     const calculateAdditionalDuration = (route, events) => {
         if (!route || route.length === 0 || !events || events.length === 0) {
             return 0;
         }
-      
-        const routeBounds = L.latLngBounds(route);
-        routeBounds.extend([
-            [routeBounds.getSouth() - 0.01, routeBounds.getWest() - 0.01],
-            [routeBounds.getNorth() + 0.01, routeBounds.getEast() + 0.01]
-        ]);
         
-        const relevantEvents = events.filter(event => {
-            const eventLat = event.location.coordinates[1];
-            const eventLng = event.location.coordinates[0];
-            return routeBounds.contains([eventLat, eventLng]);
-        });
+        const startPoint = route[0];
+        const endPoint = route[route.length - 1];
+        const isNewRoute = !routeCache.lastStart || !routeCache.lastEnd || 
+                            startPoint[0] !== routeCache.lastStart[0] || 
+                            startPoint[1] !== routeCache.lastStart[1] ||
+                            endPoint[0] !== routeCache.lastEnd[0] || 
+                            endPoint[1] !== routeCache.lastEnd[1];
+        
+        if (isNewRoute) {
+            console.log("Nouveau trajet détecté, recalcul des événements pertinents");
+            routeCache.lastStart = startPoint;
+            routeCache.lastEnd = endPoint;
+            routeCache.relevantEventIds = {};
+            
+            const MAX_DISTANCE = 0.0005;
+            
+            const pointToSegmentDistance = (p, v, w) => {
+                const lengthSquared = ((v[0] - w[0]) ** 2) + ((v[1] - w[1]) ** 2);
+                
+                if (lengthSquared === 0) {
+                    return Math.sqrt(((p[0] - v[0]) ** 2) + ((p[1] - v[1]) ** 2));
+                }
+                
+                let t = ((p[0] - v[0]) * (w[0] - v[0]) + (p[1] - v[1]) * (w[1] - v[1])) / lengthSquared;
+                t = Math.max(0, Math.min(1, t));
+                
+                const projection = [
+                    v[0] + t * (w[0] - v[0]),
+                    v[1] + t * (w[1] - v[1])
+                ];
+                
+                return Math.sqrt(((p[0] - projection[0]) ** 2) + ((p[1] - projection[1]) ** 2));
+            };
+            
+            events.forEach(event => {
+                const eventLat = event.location.coordinates[1];
+                const eventLng = event.location.coordinates[0];
+                const eventPoint = [eventLat, eventLng];
+                
+                for (let i = 0; i < route.length - 1; i++) {
+                    const distance = pointToSegmentDistance(eventPoint, route[i], route[i + 1]);
+                    
+                    if (distance < MAX_DISTANCE) {
+                        console.log(`Événement ${event.id} (${event.event_type}) est à ${distance.toFixed(6)} degrés du trajet`);
+                        routeCache.relevantEventIds[event.id] = true;
+                        break; 
+                    }
+                }
+            });
+        }
+        
+        const relevantEvents = events.filter(event => routeCache.relevantEventIds[event.id]);
         
         const additionalDuration = relevantEvents.reduce((total, event) => {
             return total + (event.estimated_duration || 0);
         }, 0);
+        
+        if (isNewRoute && relevantEvents.length > 0) {
+            console.log(`${relevantEvents.length} événements réellement sur l'itinéraire`);
+            console.log(`Événements affectant le trajet: ${relevantEvents.map(e => e.event_type).join(', ')}`);
+            console.log(`Durée additionnelle (minutes): ${additionalDuration}`);
+        }
         
         return additionalDuration * 60;
     };
