@@ -77,6 +77,42 @@
     outline: none;
 }
 
+.navigation-input-with-icon {
+    position: relative;
+    display: flex;
+    width: 100%;
+}
+
+.navigation-input-with-icon input {
+    flex: 1;
+    padding-right: 40px;
+}
+
+.navigation-location-button {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 40px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1b1b83;
+    transition: all 0.2s ease;
+}
+
+.navigation-location-button:hover {
+    background-color: rgba(27, 27, 131, 0.1);
+}
+
+.navigation-location-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 .navigation-suggestions {
     position: absolute;
     width: 100%;
