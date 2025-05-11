@@ -42,7 +42,7 @@ const Register = () => {
                 setErrorMessage('');
                 setTimeout(() => navigate('/login'), 1000); 
             } else {
-                setErrorMessage(data.message || 'Registration failed.');
+                setErrorMessage(data.details || data.message || 'Registration failed.');
             }
         } catch (error) {
             console.error('Error during query:', error);
