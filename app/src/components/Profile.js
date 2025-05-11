@@ -44,7 +44,7 @@ const Profile = () => {
 
             const data = await response.json();
 
-            if (response.status === 401 && data.detail === 'Invalid token') {
+            if (response.status === 401 && (data.details === 'Invalid token' || data.detail === 'Invalid token')) {
                 handleInvalidToken();
                 return;
             }
@@ -53,7 +53,7 @@ const Profile = () => {
                 setUser(data.data);
                 setFormData({ firstname: data.data.firstname, lastname: data.data.lastname, username: data.data.username, email: data.data.email });
             } else {
-                setErrorMessage(data.message || 'Failed to fetch user information.');
+                setErrorMessage(data.details || data.message || 'Failed to fetch user information.');
             }
         } catch (error) {
             console.error('Error fetching user:', error);
@@ -110,7 +110,7 @@ const Profile = () => {
                 setIsModalOpen(false);
                 window.location.reload(); // 🔄 Recharge la page après la sauvegarde
             } else {
-                setErrorMessage(data.message || 'Failed to update profile.');
+                setErrorMessage(data.details || data.message || 'Failed to update profile.');
             }
         } catch (error) {
             console.error('Error updating user:', error);

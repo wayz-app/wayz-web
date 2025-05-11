@@ -36,7 +36,7 @@ const Dashboard = () => {
 
             const data = await response.json();
 
-            if (response.status === 401 && data.detail === 'Invalid token') {
+            if (response.status === 401 && (data.details === 'Invalid token' || data.detail === 'Invalid token')) {
                 handleInvalidToken();
                 return;
             }
@@ -44,7 +44,7 @@ const Dashboard = () => {
             if (response.ok) {
                 setUsername(data.data.username);
             } else {
-                setErrorMessage(data.message || 'Failed to fetch user information.');
+                setErrorMessage(data.details || data.message || 'Failed to fetch user information.');
             }
         } catch (error) {
             console.error('Error fetching user:', error);

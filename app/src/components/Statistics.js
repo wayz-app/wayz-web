@@ -63,7 +63,7 @@ const Statistics = () => {
                 if (response.ok) {
                     setStatistics(data);
                 } else {
-                    setError(data.message || 'Failed to fetch statistics.');
+                    setError(data.details || data.message || 'Failed to fetch statistics.');
                 }
             } catch (error) {
                 console.error('Error fetching statistics:', error);

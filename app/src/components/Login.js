@@ -62,7 +62,7 @@ const Login = () => {
                 localStorage.setItem('token', data.access_token);
                 navigate('/dashboard');
             } else {
-                setErrorMessage(data.message || 'Login failed. Please check your credentials.');
+                setErrorMessage(data.details || data.message || 'Login failed. Please check your credentials.');
             }
         } catch (error) {
             console.error('Error during login request:', error);
